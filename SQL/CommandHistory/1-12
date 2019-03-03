@@ -1,0 +1,2035 @@
+mysql> SELECT DISTINCT subject_id, teacher_id FROM Teaches;
++------------+------------+
+| subject_id | teacher_id |
++------------+------------+
+|         12 |          0 |
+|          9 |          1 |
+|          7 |          2 |
+|          9 |          2 |
+|         12 |          2 |
+|         13 |          2 |
+|          2 |          6 |
+|         11 |          8 |
+|         10 |         10 |
+|         10 |         12 |
+|         14 |         16 |
+|          6 |         19 |
+|          6 |         20 |
+|          0 |         23 |
+|          0 |         24 |
+|          1 |         27 |
+|          8 |         31 |
+|          0 |         36 |
+|          6 |         36 |
+|          8 |         36 |
+|          9 |         36 |
+|         11 |         36 |
+|         11 |         37 |
+|          8 |         38 |
+|          2 |         41 |
+|          4 |         41 |
+|          3 |         42 |
+|         10 |         42 |
+|          3 |         43 |
+|         13 |         43 |
+|         14 |         43 |
+|          3 |         44 |
+|          2 |         45 |
+|          4 |         45 |
+|          5 |         45 |
+|         12 |         45 |
+|          5 |         46 |
+|         13 |         46 |
++------------+------------+
+38 rows in set (0.00 sec)
+
+mysql> SELECT s.subject_id, COUNT(*) FROM (SELECT DISTINCT subject_id, teacher_id FROM Teaches) AS s GROUP BY s.subject_id;
++------------+----------+
+| subject_id | COUNT(*) |
++------------+----------+
+|          0 |        3 |
+|          1 |        1 |
+|          2 |        3 |
+|          3 |        3 |
+|          4 |        2 |
+|          5 |        2 |
+|          6 |        3 |
+|          7 |        1 |
+|          8 |        3 |
+|          9 |        3 |
+|         10 |        3 |
+|         11 |        3 |
+|         12 |        3 |
+|         13 |        3 |
+|         14 |        2 |
++------------+----------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT s.subject_id, COUNT(*) FROM (SELECT DISTINCT subject_id, teacher_id FROM Teaches) AS s GROUP BY s.subject_id) AS ss JOIN Subjects ON ss.subject_id=Subjects.id;
++------------+----------+----+-------------------------+---------+-------+
+| subject_id | COUNT(*) | id | name                    | credits | field |
++------------+----------+----+-------------------------+---------+-------+
+|          0 |        3 |  0 | Calculus                |      10 | mat   |
+|          1 |        1 |  1 | Gaulois theory          |       5 | mat   |
+|          2 |        3 |  2 | Intro to programming    |      20 | cs    |
+|          3 |        3 |  3 | Advanced programming    |      20 | cs    |
+|          4 |        2 |  4 | Compilers               |      15 | cs    |
+|          5 |        2 |  5 | Computer networks       |      10 | cs    |
+|          6 |        3 |  6 | Algebra                 |      15 | mat   |
+|          7 |        1 |  7 | Artificial Intelligence |      20 | cs    |
+|          8 |        3 |  8 | Calculus 2              |      10 | mat   |
+|          9 |        3 |  9 | Data mining             |      15 | mat   |
+|         10 |        3 | 10 | Hardware                |      10 | cs    |
+|         11 |        3 | 11 | Physics                 |      10 | ph    |
+|         12 |        3 | 12 | Computer science        |      10 | cs    |
+|         13 |        3 | 13 | Applications            |       5 | all   |
+|         14 |        2 | 14 | Algorithms              |      15 | cs    |
++------------+----------+----+-------------------------+---------+-------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT s.subject_id, COUNT(*) AS n_teachers FROM (SELECT DISTINCT subject_id, teacher_id FROM Teaches) AS s GROUP BY s.subject_id) AS ss JOIN Subjects ON ss.subject_id=Subjects.id WHERE n_teachers=1;
++------------+------------+----+-------------------------+---------+-------+
+| subject_id | n_teachers | id | name                    | credits | field |
++------------+------------+----+-------------------------+---------+-------+
+|          1 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|          7 |          1 |  7 | Artificial Intelligence |      20 | cs    |
++------------+------------+----+-------------------------+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT Subjects.name FROM (SELECT s.subject_id, COUNT(*) AS n_teachers FROM (SELECT DISTINCT subject_id, teacher_id FROM Teaches) AS s GROUP BY s.subject_id) AS ss JOIN Subjects ON ss.subject_id=Subjects.id WHERE n_teachers=1;
++-------------------------+
+| name                    |
++-------------------------+
+| Gaulois theory          |
+| Artificial Intelligence |
++-------------------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Teaches WHERE year=2017;
++------------+------------+------+
+| teacher_id | subject_id | year |
++------------+------------+------+
+|          2 |          7 | 2017 |
+|          2 |          9 | 2017 |
+|          2 |         13 | 2017 |
+|         27 |          1 | 2017 |
+|         31 |          8 | 2017 |
+|         36 |          0 | 2017 |
+|         36 |          6 | 2017 |
+|         37 |         11 | 2017 |
+|         42 |         10 | 2017 |
+|         43 |         14 | 2017 |
+|         44 |          3 | 2017 |
+|         45 |          2 | 2017 |
+|         45 |          4 | 2017 |
+|         45 |         12 | 2017 |
+|         46 |          5 | 2017 |
++------------+------------+------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id;
++------------+------------+------+----+-------------------------+---------+-------+
+| teacher_id | subject_id | year | id | name                    | credits | field |
++------------+------------+------+----+-------------------------+---------+-------+
+|          2 |          7 | 2017 |  7 | Artificial Intelligence |      20 | cs    |
+|          2 |          9 | 2017 |  9 | Data mining             |      15 | mat   |
+|          2 |         13 | 2017 | 13 | Applications            |       5 | all   |
+|         27 |          1 | 2017 |  1 | Gaulois theory          |       5 | mat   |
+|         31 |          8 | 2017 |  8 | Calculus 2              |      10 | mat   |
+|         36 |          0 | 2017 |  0 | Calculus                |      10 | mat   |
+|         36 |          6 | 2017 |  6 | Algebra                 |      15 | mat   |
+|         37 |         11 | 2017 | 11 | Physics                 |      10 | ph    |
+|         42 |         10 | 2017 | 10 | Hardware                |      10 | cs    |
+|         43 |         14 | 2017 | 14 | Algorithms              |      15 | cs    |
+|         44 |          3 | 2017 |  3 | Advanced programming    |      20 | cs    |
+|         45 |          2 | 2017 |  2 | Intro to programming    |      20 | cs    |
+|         45 |          4 | 2017 |  4 | Compilers               |      15 | cs    |
+|         45 |         12 | 2017 | 12 | Computer science        |      10 | cs    |
+|         46 |          5 | 2017 |  5 | Computer networks       |      10 | cs    |
++------------+------------+------+----+-------------------------+---------+-------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id;
++------------+---------+
+| teacher_id | credits |
++------------+---------+
+|          2 |      20 |
+|          2 |      15 |
+|          2 |       5 |
+|         27 |       5 |
+|         31 |      10 |
+|         36 |      10 |
+|         36 |      15 |
+|         37 |      10 |
+|         42 |      10 |
+|         43 |      15 |
+|         44 |      20 |
+|         45 |      20 |
+|         45 |      15 |
+|         45 |      10 |
+|         46 |      10 |
++------------+---------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT teacher_id, SUM(*) FROM (SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id) GROUP BY teacher_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) FROM (SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017)' at line 1
+mysql> SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.Subjects.credits' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id;
++------------+---------+
+| teacher_id | credits |
++------------+---------+
+|          2 |      20 |
+|          2 |      15 |
+|          2 |       5 |
+|         27 |       5 |
+|         31 |      10 |
+|         36 |      10 |
+|         36 |      15 |
+|         37 |      10 |
+|         42 |      10 |
+|         43 |      15 |
+|         44 |      20 |
+|         45 |      20 |
+|         45 |      15 |
+|         45 |      10 |
+|         46 |      10 |
++------------+---------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id) AS final GROUP BY final.teacher_id;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'final.credits' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT * FROM (SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id) AS final GROUP BY teacher_id;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'final.credits' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT * FROM (SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id) AS final;
++------------+---------+
+| teacher_id | credits |
++------------+---------+
+|          2 |      20 |
+|          2 |      15 |
+|          2 |       5 |
+|         27 |       5 |
+|         31 |      10 |
+|         36 |      10 |
+|         36 |      15 |
+|         37 |      10 |
+|         42 |      10 |
+|         43 |      15 |
+|         44 |      20 |
+|         45 |      20 |
+|         45 |      15 |
+|         45 |      10 |
+|         46 |      10 |
++------------+---------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id;
++------------+---------+
+| teacher_id | credits |
++------------+---------+
+|          2 |      20 |
+|          2 |      15 |
+|          2 |       5 |
+|         27 |       5 |
+|         31 |      10 |
+|         36 |      10 |
+|         36 |      15 |
+|         37 |      10 |
+|         42 |      10 |
+|         43 |      15 |
+|         44 |      20 |
+|         45 |      20 |
+|         45 |      15 |
+|         45 |      10 |
+|         46 |      10 |
++------------+---------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT teacher_id, credits FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id;
++------------+---------+
+| teacher_id | credits |
++------------+---------+
+|          2 |      20 |
+|          2 |      15 |
+|          2 |       5 |
+|         27 |       5 |
+|         31 |      10 |
+|         36 |      10 |
+|         36 |      15 |
+|         37 |      10 |
+|         42 |      10 |
+|         43 |      15 |
+|         44 |      20 |
+|         45 |      20 |
+|         45 |      15 |
+|         45 |      10 |
+|         46 |      10 |
++------------+---------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT teacher_id, SUM(credits) FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id;
++------------+--------------+
+| teacher_id | SUM(credits) |
++------------+--------------+
+|          2 |           40 |
+|         27 |            5 |
+|         31 |           10 |
+|         36 |           25 |
+|         37 |           10 |
+|         42 |           10 |
+|         43 |           15 |
+|         44 |           20 |
+|         45 |           45 |
+|         46 |           10 |
++------------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT teacher_id, 0.3*SUM(credits) FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id;
++------------+------------------+
+| teacher_id | 0.3*SUM(credits) |
++------------+------------------+
+|          2 |             12.0 |
+|         27 |              1.5 |
+|         31 |              3.0 |
+|         36 |              7.5 |
+|         37 |              3.0 |
+|         42 |              3.0 |
+|         43 |              4.5 |
+|         44 |              6.0 |
+|         45 |             13.5 |
+|         46 |              3.0 |
++------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT teacher_id, 0.3*SUM(credits) FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id) AS sueldo JOIN People ON sueldo.teacher_id=People_id;
+ERROR 1054 (42S22): Unknown column 'People_id' in 'on clause'
+mysql> SELECT * FROM (SELECT teacher_id, 0.3*SUM(credits) FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id) AS sueldo JOIN People ON sueldo.teacher_id=People.id;
++------------+------------------+----+-----------------------+--------+-------------+------+
+| teacher_id | 0.3*SUM(credits) | id | name                  | gender | nationality | age  |
++------------+------------------+----+-----------------------+--------+-------------+------+
+|          2 |             12.0 |  2 | Alan Turing           | M      | British     |   43 |
+|         27 |              1.5 | 27 | Evariste Galois       | M      | French      |   19 |
+|         31 |              3.0 | 31 | Sophie Germain        | F      | French      |   31 |
+|         36 |              7.5 | 36 | Carl Friederich Gauss | M      | German      |   26 |
+|         37 |              3.0 | 37 | Andre Marie Ampere    | M      | French      |   27 |
+|         42 |              3.0 | 42 | Margaret Hamilton     | F      | American    |   23 |
+|         43 |              4.5 | 43 | Linux Torvalds        | M      | Finnish     |   21 |
+|         44 |              6.0 | 44 | Richard Stallman      | M      | American    |   25 |
+|         45 |             13.5 | 45 | Dennis Ritchie        | M      | American    |   19 |
+|         46 |              3.0 | 46 | Tim Berners-Lee       | M      | American    |   20 |
++------------+------------------+----+-----------------------+--------+-------------+------+
+10 rows in set (0.07 sec)
+
+mysql> SELECT name, Sueldo FROM (SELECT teacher_id, 0.3*SUM(credits) AS Sueldo FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id) AS sueldo JOIN People ON sueldo.teacher_id=People.id;
++-----------------------+--------+
+| name                  | Sueldo |
++-----------------------+--------+
+| Alan Turing           |   12.0 |
+| Evariste Galois       |    1.5 |
+| Sophie Germain        |    3.0 |
+| Carl Friederich Gauss |    7.5 |
+| Andre Marie Ampere    |    3.0 |
+| Margaret Hamilton     |    3.0 |
+| Linux Torvalds        |    4.5 |
+| Richard Stallman      |    6.0 |
+| Dennis Ritchie        |   13.5 |
+| Tim Berners-Lee       |    3.0 |
++-----------------------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT name, Sueldo FROM (SELECT teacher_id, 0.3*30*SUM(credits) AS Sueldo FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id) AS sueldo JOIN People ON sueldo.teacher_id=People.id;
++-----------------------+--------+
+| name                  | Sueldo |
++-----------------------+--------+
+| Alan Turing           |  360.0 |
+| Evariste Galois       |   45.0 |
+| Sophie Germain        |   90.0 |
+| Carl Friederich Gauss |  225.0 |
+| Andre Marie Ampere    |   90.0 |
+| Margaret Hamilton     |   90.0 |
+| Linux Torvalds        |  135.0 |
+| Richard Stallman      |  180.0 |
+| Dennis Ritchie        |  405.0 |
+| Tim Berners-Lee       |   90.0 |
++-----------------------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies;
++------------+------------+------+------+
+| student_id | subject_id | year | mark |
++------------+------------+------+------+
+|          0 |          2 | 2015 |    3 |
+|          0 |          2 | 2016 |    5 |
+|          0 |          4 | 2016 |    9 |
+|          0 |         11 | 2016 |   10 |
+|          0 |         14 | 2017 |   10 |
+|          1 |          6 | 2017 |    4 |
+|          1 |          9 | 2015 |    4 |
+|          1 |         10 | 2015 |    7 |
+|          1 |         10 | 2016 |   10 |
+|          1 |         12 | 2015 |    6 |
+|          1 |         13 | 2015 |    4 |
+|          2 |          2 | 2017 |    6 |
+|          2 |          5 | 2015 |    6 |
+|          2 |          5 | 2016 |    6 |
+|          2 |          7 | 2016 |    5 |
+|          2 |         10 | 2017 |    7 |
+|          2 |         13 | 2017 |    5 |
+|          3 |          5 | 2017 |    6 |
+|          3 |          7 | 2017 |    7 |
+|          3 |          8 | 2017 |    9 |
+|          3 |          9 | 2016 |    8 |
+|          3 |         11 | 2015 |    8 |
+|          4 |          1 | 2017 |    3 |
+|          4 |          2 | 2017 |    3 |
+|          4 |          8 | 2016 |   10 |
+|          5 |          8 | 2015 |    5 |
+|          6 |          2 | 2015 |    8 |
+|          6 |          4 | 2015 |    3 |
+|          6 |          7 | 2015 |    3 |
+|          6 |         11 | 2017 |   10 |
+|          6 |         14 | 2017 |    6 |
+|          7 |          1 | 2015 |    3 |
+|          7 |          3 | 2017 |    3 |
+|          7 |         10 | 2016 |    6 |
+|          7 |         11 | 2016 |    6 |
+|          7 |         12 | 2016 |    6 |
+|          7 |         13 | 2015 |    4 |
+|          8 |          1 | 2015 |    6 |
+|          8 |          2 | 2015 |    4 |
+|          8 |          3 | 2016 |    7 |
+|          8 |          4 | 2015 |    9 |
+|          8 |          6 | 2016 |    7 |
+|          8 |          7 | 2017 |    7 |
+|          8 |          8 | 2015 |    7 |
+|          8 |          9 | 2015 |    5 |
+|          9 |          3 | 2017 |    9 |
+|          9 |          6 | 2016 |    6 |
+|          9 |          7 | 2016 |   10 |
+|          9 |         13 | 2017 |    9 |
+|         10 |          0 | 2016 |    7 |
+|         10 |          1 | 2017 |    7 |
+|         10 |          3 | 2017 |    5 |
+|         10 |          7 | 2016 |   10 |
+|         10 |         10 | 2016 |    6 |
+|         11 |          2 | 2015 |    6 |
+|         11 |          5 | 2015 |    6 |
+|         11 |          8 | 2015 |    3 |
+|         11 |         10 | 2015 |    5 |
+|         12 |          4 | 2015 |    7 |
+|         12 |          5 | 2015 |    9 |
+|         12 |          7 | 2016 |    8 |
+|         12 |         10 | 2015 |    3 |
+|         12 |         11 | 2016 |    5 |
+|         12 |         13 | 2015 |    8 |
+|         12 |         14 | 2017 |    5 |
+|         13 |          3 | 2016 |    3 |
+|         13 |         13 | 2015 |    3 |
+|         13 |         14 | 2016 |   10 |
+|         14 |          1 | 2017 |    7 |
+|         14 |          3 | 2015 |    6 |
+|         15 |          0 | 2017 |    5 |
+|         15 |          5 | 2015 |    6 |
+|         15 |          8 | 2016 |    7 |
+|         15 |         10 | 2017 |   10 |
+|         15 |         11 | 2015 |    9 |
+|         15 |         12 | 2015 |    9 |
+|         16 |          1 | 2016 |   10 |
+|         16 |          7 | 2015 |    7 |
+|         16 |          9 | 2016 |    4 |
+|         17 |          1 | 2015 |    4 |
+|         17 |          2 | 2016 |    3 |
+|         17 |          3 | 2016 |    4 |
+|         17 |          3 | 2017 |    6 |
+|         17 |          4 | 2015 |    6 |
+|         17 |          4 | 2016 |    6 |
+|         17 |          6 | 2016 |   10 |
+|         17 |          7 | 2017 |    7 |
+|         17 |          9 | 2016 |    6 |
+|         17 |         11 | 2017 |    8 |
+|         17 |         14 | 2017 |    4 |
+|         18 |          0 | 2016 |    4 |
+|         18 |          3 | 2016 |    5 |
+|         18 |          4 | 2017 |    6 |
+|         18 |          5 | 2017 |    7 |
+|         18 |          6 | 2017 |    7 |
+|         18 |          7 | 2016 |    4 |
+|         19 |          4 | 2015 |    7 |
+|         19 |          6 | 2015 |    6 |
+|         19 |          8 | 2016 |    9 |
+|         19 |          8 | 2017 |   10 |
+|         19 |         10 | 2015 |    4 |
+|         19 |         14 | 2015 |    9 |
+|         20 |          0 | 2017 |    3 |
+|         20 |          1 | 2016 |    9 |
+|         20 |          2 | 2015 |    9 |
+|         20 |          4 | 2017 |   10 |
+|         20 |          5 | 2016 |    9 |
+|         20 |         10 | 2017 |    9 |
+|         20 |         12 | 2015 |    4 |
+|         20 |         13 | 2017 |   10 |
+|         20 |         14 | 2016 |    8 |
+|         21 |          3 | 2017 |    7 |
+|         21 |          6 | 2015 |    3 |
+|         21 |          7 | 2017 |    6 |
+|         21 |          8 | 2017 |    6 |
+|         21 |         12 | 2017 |    9 |
+|         21 |         14 | 2016 |    5 |
+|         22 |          5 | 2016 |   10 |
+|         22 |         11 | 2016 |    3 |
+|         22 |         13 | 2015 |    6 |
+|         22 |         13 | 2016 |   10 |
+|         23 |          0 | 2015 |    9 |
+|         23 |          0 | 2016 |    3 |
+|         23 |          0 | 2017 |    4 |
+|         23 |          1 | 2017 |    8 |
+|         23 |          2 | 2016 |    4 |
+|         24 |          1 | 2015 |    4 |
+|         24 |          1 | 2016 |    5 |
+|         24 |          2 | 2015 |    7 |
+|         24 |          2 | 2016 |    9 |
+|         24 |          4 | 2017 |    4 |
+|         25 |          2 | 2015 |    6 |
+|         25 |          4 | 2016 |   10 |
+|         25 |          7 | 2015 |    4 |
+|         25 |         11 | 2015 |    7 |
+|         26 |          0 | 2017 |    8 |
+|         26 |          6 | 2015 |    4 |
+|         26 |          7 | 2015 |    4 |
+|         26 |          7 | 2016 |    4 |
+|         26 |          9 | 2016 |    3 |
+|         26 |         10 | 2015 |    3 |
+|         26 |         12 | 2016 |   10 |
+|         27 |          1 | 2017 |    7 |
+|         27 |          3 | 2015 |    8 |
+|         27 |          4 | 2015 |    6 |
+|         27 |          7 | 2015 |    7 |
+|         27 |          8 | 2015 |    3 |
+|         27 |          8 | 2017 |    6 |
+|         27 |          9 | 2017 |    3 |
+|         28 |          0 | 2017 |   10 |
+|         28 |          2 | 2016 |    3 |
+|         28 |          6 | 2016 |    5 |
+|         28 |          8 | 2015 |    4 |
+|         28 |          8 | 2017 |   10 |
+|         28 |         10 | 2017 |    9 |
+|         28 |         14 | 2015 |   10 |
+|         28 |         14 | 2016 |    4 |
+|         29 |          4 | 2016 |    9 |
+|         29 |          4 | 2017 |    3 |
+|         29 |          6 | 2016 |    5 |
+|         29 |         10 | 2015 |    5 |
+|         29 |         12 | 2015 |   10 |
+|         29 |         12 | 2017 |    7 |
+|         29 |         13 | 2016 |    9 |
+|         29 |         14 | 2015 |    9 |
+|         30 |          0 | 2015 |    4 |
+|         30 |          5 | 2015 |    9 |
+|         30 |          7 | 2016 |    6 |
+|         31 |          1 | 2017 |    9 |
+|         31 |          3 | 2016 |    9 |
+|         31 |         11 | 2016 |    7 |
+|         32 |          3 | 2017 |    9 |
+|         32 |          4 | 2016 |    4 |
+|         32 |          9 | 2016 |    5 |
+|         32 |         10 | 2017 |    5 |
+|         32 |         12 | 2015 |    7 |
+|         33 |          3 | 2016 |    9 |
+|         33 |          5 | 2015 |    9 |
+|         33 |          8 | 2016 |    5 |
+|         33 |          9 | 2015 |    4 |
+|         33 |          9 | 2016 |    7 |
+|         33 |         14 | 2016 |    9 |
+|         34 |          1 | 2015 |   10 |
+|         34 |          1 | 2016 |    3 |
+|         34 |          2 | 2015 |    3 |
+|         34 |          3 | 2017 |    8 |
+|         34 |          5 | 2015 |    5 |
+|         34 |          5 | 2016 |    3 |
+|         35 |          3 | 2017 |    8 |
+|         35 |          9 | 2016 |    6 |
+|         36 |          2 | 2017 |    7 |
+|         37 |          0 | 2017 |    7 |
+|         37 |          4 | 2016 |    4 |
+|         37 |          6 | 2016 |    9 |
+|         38 |          3 | 2015 |    7 |
+|         38 |          7 | 2016 |    9 |
+|         38 |          9 | 2015 |    8 |
+|         38 |         10 | 2016 |    8 |
+|         38 |         13 | 2017 |    8 |
+|         38 |         14 | 2016 |    5 |
+|         39 |          1 | 2015 |    3 |
+|         39 |          1 | 2016 |    3 |
+|         39 |          2 | 2015 |    4 |
+|         39 |          3 | 2017 |    4 |
+|         39 |         14 | 2015 |   10 |
+|         40 |          7 | 2015 |    4 |
+|         40 |         11 | 2017 |   10 |
+|         40 |         13 | 2017 |    8 |
+|         41 |          2 | 2017 |    8 |
+|         41 |          3 | 2016 |    9 |
+|         41 |          6 | 2016 |    6 |
+|         41 |          8 | 2017 |    8 |
+|         41 |          9 | 2017 |    9 |
+|         41 |         13 | 2015 |    8 |
+|         41 |         13 | 2017 |    5 |
+|         42 |          0 | 2016 |    8 |
+|         42 |          1 | 2016 |   10 |
+|         42 |          2 | 2015 |    6 |
+|         42 |          2 | 2016 |    4 |
+|         42 |          3 | 2017 |    8 |
+|         42 |          6 | 2015 |    8 |
+|         42 |         10 | 2016 |    4 |
+|         42 |         11 | 2017 |    3 |
+|         43 |          4 | 2015 |    5 |
+|         43 |          9 | 2017 |    3 |
+|         44 |          5 | 2016 |   10 |
+|         44 |          6 | 2017 |    7 |
+|         45 |          2 | 2017 |    6 |
+|         45 |          3 | 2015 |    7 |
+|         45 |          5 | 2015 |    4 |
+|         45 |          7 | 2016 |    5 |
+|         45 |          8 | 2015 |    6 |
+|         45 |         12 | 2016 |    9 |
+|         46 |          6 | 2015 |    5 |
+|         46 |          8 | 2017 |    8 |
+|         46 |          9 | 2017 |    5 |
+|         46 |         14 | 2017 |    3 |
++------------+------------+------+------+
+237 rows in set (0.00 sec)
+
+mysql> SELECT name, Sueldo FROM (SELECT teacher_id, 0.3*30*SUM(credits) AS Sueldo FROM (SELECT * FROM Teaches WHERE year=2017) AS t17 JOIN Subjects ON t17.subject_id=Subjects.id GROUP BY teacher_id) AS sueldo JOIN People ON sueldo.teacher_id=People.id;
++-----------------------+--------+
+| name                  | Sueldo |
++-----------------------+--------+
+| Alan Turing           |  360.0 |
+| Evariste Galois       |   45.0 |
+| Sophie Germain        |   90.0 |
+| Carl Friederich Gauss |  225.0 |
+| Andre Marie Ampere    |   90.0 |
+| Margaret Hamilton     |   90.0 |
+| Linux Torvalds        |  135.0 |
+| Richard Stallman      |  180.0 |
+| Dennis Ritchie        |  405.0 |
+| Tim Berners-Lee       |   90.0 |
++-----------------------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies WHERE year=2017;
++------------+------------+------+------+
+| student_id | subject_id | year | mark |
++------------+------------+------+------+
+|          0 |         14 | 2017 |   10 |
+|          1 |          6 | 2017 |    4 |
+|          2 |          2 | 2017 |    6 |
+|          2 |         10 | 2017 |    7 |
+|          2 |         13 | 2017 |    5 |
+|          3 |          5 | 2017 |    6 |
+|          3 |          7 | 2017 |    7 |
+|          3 |          8 | 2017 |    9 |
+|          4 |          1 | 2017 |    3 |
+|          4 |          2 | 2017 |    3 |
+|          6 |         11 | 2017 |   10 |
+|          6 |         14 | 2017 |    6 |
+|          7 |          3 | 2017 |    3 |
+|          8 |          7 | 2017 |    7 |
+|          9 |          3 | 2017 |    9 |
+|          9 |         13 | 2017 |    9 |
+|         10 |          1 | 2017 |    7 |
+|         10 |          3 | 2017 |    5 |
+|         12 |         14 | 2017 |    5 |
+|         14 |          1 | 2017 |    7 |
+|         15 |          0 | 2017 |    5 |
+|         15 |         10 | 2017 |   10 |
+|         17 |          3 | 2017 |    6 |
+|         17 |          7 | 2017 |    7 |
+|         17 |         11 | 2017 |    8 |
+|         17 |         14 | 2017 |    4 |
+|         18 |          4 | 2017 |    6 |
+|         18 |          5 | 2017 |    7 |
+|         18 |          6 | 2017 |    7 |
+|         19 |          8 | 2017 |   10 |
+|         20 |          0 | 2017 |    3 |
+|         20 |          4 | 2017 |   10 |
+|         20 |         10 | 2017 |    9 |
+|         20 |         13 | 2017 |   10 |
+|         21 |          3 | 2017 |    7 |
+|         21 |          7 | 2017 |    6 |
+|         21 |          8 | 2017 |    6 |
+|         21 |         12 | 2017 |    9 |
+|         23 |          0 | 2017 |    4 |
+|         23 |          1 | 2017 |    8 |
+|         24 |          4 | 2017 |    4 |
+|         26 |          0 | 2017 |    8 |
+|         27 |          1 | 2017 |    7 |
+|         27 |          8 | 2017 |    6 |
+|         27 |          9 | 2017 |    3 |
+|         28 |          0 | 2017 |   10 |
+|         28 |          8 | 2017 |   10 |
+|         28 |         10 | 2017 |    9 |
+|         29 |          4 | 2017 |    3 |
+|         29 |         12 | 2017 |    7 |
+|         31 |          1 | 2017 |    9 |
+|         32 |          3 | 2017 |    9 |
+|         32 |         10 | 2017 |    5 |
+|         34 |          3 | 2017 |    8 |
+|         35 |          3 | 2017 |    8 |
+|         36 |          2 | 2017 |    7 |
+|         37 |          0 | 2017 |    7 |
+|         38 |         13 | 2017 |    8 |
+|         39 |          3 | 2017 |    4 |
+|         40 |         11 | 2017 |   10 |
+|         40 |         13 | 2017 |    8 |
+|         41 |          2 | 2017 |    8 |
+|         41 |          8 | 2017 |    8 |
+|         41 |          9 | 2017 |    9 |
+|         41 |         13 | 2017 |    5 |
+|         42 |          3 | 2017 |    8 |
+|         42 |         11 | 2017 |    3 |
+|         43 |          9 | 2017 |    3 |
+|         44 |          6 | 2017 |    7 |
+|         45 |          2 | 2017 |    6 |
+|         46 |          8 | 2017 |    8 |
+|         46 |          9 | 2017 |    5 |
+|         46 |         14 | 2017 |    3 |
++------------+------------+------+------+
+73 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies WHERE year=2017 GROUP BY Studies.subject_id;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.Studies.student_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT Studies.subject_id, COUNT(*) FROM Studies WHERE year=2017 GROUP BY Studies.subject_id;
++------------+----------+
+| subject_id | COUNT(*) |
++------------+----------+
+|          0 |        6 |
+|          1 |        6 |
+|          2 |        5 |
+|          3 |       10 |
+|          4 |        4 |
+|          5 |        2 |
+|          6 |        3 |
+|          7 |        4 |
+|          8 |        7 |
+|          9 |        4 |
+|         10 |        5 |
+|         11 |        4 |
+|         12 |        2 |
+|         13 |        6 |
+|         14 |        5 |
++------------+----------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT Studies.subject_id, COUNT(*) AS n_students FROM Studies WHERE year=2017 GROUP BY Studies.subject_id;
++------------+------------+
+| subject_id | n_students |
++------------+------------+
+|          0 |          6 |
+|          1 |          6 |
+|          2 |          5 |
+|          3 |         10 |
+|          4 |          4 |
+|          5 |          2 |
+|          6 |          3 |
+|          7 |          4 |
+|          8 |          7 |
+|          9 |          4 |
+|         10 |          5 |
+|         11 |          4 |
+|         12 |          2 |
+|         13 |          6 |
+|         14 |          5 |
++------------+------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT Studies.subject_id, COUNT(*) AS n_students FROM Studies WHERE year=2017 GROUP BY Studies.subject_id) AS t JOIN Subjects ON t.subject_id=Subjects.id;
++------------+------------+----+-------------------------+---------+-------+
+| subject_id | n_students | id | name                    | credits | field |
++------------+------------+----+-------------------------+---------+-------+
+|          0 |          6 |  0 | Calculus                |      10 | mat   |
+|          1 |          6 |  1 | Gaulois theory          |       5 | mat   |
+|          2 |          5 |  2 | Intro to programming    |      20 | cs    |
+|          3 |         10 |  3 | Advanced programming    |      20 | cs    |
+|          4 |          4 |  4 | Compilers               |      15 | cs    |
+|          5 |          2 |  5 | Computer networks       |      10 | cs    |
+|          6 |          3 |  6 | Algebra                 |      15 | mat   |
+|          7 |          4 |  7 | Artificial Intelligence |      20 | cs    |
+|          8 |          7 |  8 | Calculus 2              |      10 | mat   |
+|          9 |          4 |  9 | Data mining             |      15 | mat   |
+|         10 |          5 | 10 | Hardware                |      10 | cs    |
+|         11 |          4 | 11 | Physics                 |      10 | ph    |
+|         12 |          2 | 12 | Computer science        |      10 | cs    |
+|         13 |          6 | 13 | Applications            |       5 | all   |
+|         14 |          5 | 14 | Algorithms              |      15 | cs    |
++------------+------------+----+-------------------------+---------+-------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT Subjects.id, t.n_students * Subjects.credits FROM (SELECT Studies.subject_id, COUNT(*) AS n_students FROM Studies WHERE year=2017 GROUP BY Studies.subject_id) AS t JOIN Subjects ON t.subject_id=Subjects.id;
++----+---------------------------------+
+| id | t.n_students * Subjects.credits |
++----+---------------------------------+
+|  0 |                              60 |
+|  1 |                              30 |
+|  2 |                             100 |
+|  3 |                             200 |
+|  4 |                              60 |
+|  5 |                              20 |
+|  6 |                              45 |
+|  7 |                              80 |
+|  8 |                              70 |
+|  9 |                              60 |
+| 10 |                              50 |
+| 11 |                              40 |
+| 12 |                              20 |
+| 13 |                              30 |
+| 14 |                              75 |
++----+---------------------------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id;
++------------+------------+------+------+----+-------------------------+---------+-------+
+| student_id | subject_id | year | mark | id | name                    | credits | field |
++------------+------------+------+------+----+-------------------------+---------+-------+
+|          0 |          2 | 2015 |    3 |  2 | Intro to programming    |      20 | cs    |
+|          0 |          2 | 2016 |    5 |  2 | Intro to programming    |      20 | cs    |
+|          0 |          4 | 2016 |    9 |  4 | Compilers               |      15 | cs    |
+|          0 |         11 | 2016 |   10 | 11 | Physics                 |      10 | ph    |
+|          0 |         14 | 2017 |   10 | 14 | Algorithms              |      15 | cs    |
+|          1 |          6 | 2017 |    4 |  6 | Algebra                 |      15 | mat   |
+|          1 |          9 | 2015 |    4 |  9 | Data mining             |      15 | mat   |
+|          1 |         10 | 2015 |    7 | 10 | Hardware                |      10 | cs    |
+|          1 |         10 | 2016 |   10 | 10 | Hardware                |      10 | cs    |
+|          1 |         12 | 2015 |    6 | 12 | Computer science        |      10 | cs    |
+|          1 |         13 | 2015 |    4 | 13 | Applications            |       5 | all   |
+|          2 |          2 | 2017 |    6 |  2 | Intro to programming    |      20 | cs    |
+|          2 |          5 | 2015 |    6 |  5 | Computer networks       |      10 | cs    |
+|          2 |          5 | 2016 |    6 |  5 | Computer networks       |      10 | cs    |
+|          2 |          7 | 2016 |    5 |  7 | Artificial Intelligence |      20 | cs    |
+|          2 |         10 | 2017 |    7 | 10 | Hardware                |      10 | cs    |
+|          2 |         13 | 2017 |    5 | 13 | Applications            |       5 | all   |
+|          3 |          5 | 2017 |    6 |  5 | Computer networks       |      10 | cs    |
+|          3 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|          3 |          8 | 2017 |    9 |  8 | Calculus 2              |      10 | mat   |
+|          3 |          9 | 2016 |    8 |  9 | Data mining             |      15 | mat   |
+|          3 |         11 | 2015 |    8 | 11 | Physics                 |      10 | ph    |
+|          4 |          1 | 2017 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|          4 |          2 | 2017 |    3 |  2 | Intro to programming    |      20 | cs    |
+|          4 |          8 | 2016 |   10 |  8 | Calculus 2              |      10 | mat   |
+|          5 |          8 | 2015 |    5 |  8 | Calculus 2              |      10 | mat   |
+|          6 |          2 | 2015 |    8 |  2 | Intro to programming    |      20 | cs    |
+|          6 |          4 | 2015 |    3 |  4 | Compilers               |      15 | cs    |
+|          6 |          7 | 2015 |    3 |  7 | Artificial Intelligence |      20 | cs    |
+|          6 |         11 | 2017 |   10 | 11 | Physics                 |      10 | ph    |
+|          6 |         14 | 2017 |    6 | 14 | Algorithms              |      15 | cs    |
+|          7 |          1 | 2015 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|          7 |          3 | 2017 |    3 |  3 | Advanced programming    |      20 | cs    |
+|          7 |         10 | 2016 |    6 | 10 | Hardware                |      10 | cs    |
+|          7 |         11 | 2016 |    6 | 11 | Physics                 |      10 | ph    |
+|          7 |         12 | 2016 |    6 | 12 | Computer science        |      10 | cs    |
+|          7 |         13 | 2015 |    4 | 13 | Applications            |       5 | all   |
+|          8 |          1 | 2015 |    6 |  1 | Gaulois theory          |       5 | mat   |
+|          8 |          2 | 2015 |    4 |  2 | Intro to programming    |      20 | cs    |
+|          8 |          3 | 2016 |    7 |  3 | Advanced programming    |      20 | cs    |
+|          8 |          4 | 2015 |    9 |  4 | Compilers               |      15 | cs    |
+|          8 |          6 | 2016 |    7 |  6 | Algebra                 |      15 | mat   |
+|          8 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|          8 |          8 | 2015 |    7 |  8 | Calculus 2              |      10 | mat   |
+|          8 |          9 | 2015 |    5 |  9 | Data mining             |      15 | mat   |
+|          9 |          3 | 2017 |    9 |  3 | Advanced programming    |      20 | cs    |
+|          9 |          6 | 2016 |    6 |  6 | Algebra                 |      15 | mat   |
+|          9 |          7 | 2016 |   10 |  7 | Artificial Intelligence |      20 | cs    |
+|          9 |         13 | 2017 |    9 | 13 | Applications            |       5 | all   |
+|         10 |          0 | 2016 |    7 |  0 | Calculus                |      10 | mat   |
+|         10 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         10 |          3 | 2017 |    5 |  3 | Advanced programming    |      20 | cs    |
+|         10 |          7 | 2016 |   10 |  7 | Artificial Intelligence |      20 | cs    |
+|         10 |         10 | 2016 |    6 | 10 | Hardware                |      10 | cs    |
+|         11 |          2 | 2015 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         11 |          5 | 2015 |    6 |  5 | Computer networks       |      10 | cs    |
+|         11 |          8 | 2015 |    3 |  8 | Calculus 2              |      10 | mat   |
+|         11 |         10 | 2015 |    5 | 10 | Hardware                |      10 | cs    |
+|         12 |          4 | 2015 |    7 |  4 | Compilers               |      15 | cs    |
+|         12 |          5 | 2015 |    9 |  5 | Computer networks       |      10 | cs    |
+|         12 |          7 | 2016 |    8 |  7 | Artificial Intelligence |      20 | cs    |
+|         12 |         10 | 2015 |    3 | 10 | Hardware                |      10 | cs    |
+|         12 |         11 | 2016 |    5 | 11 | Physics                 |      10 | ph    |
+|         12 |         13 | 2015 |    8 | 13 | Applications            |       5 | all   |
+|         12 |         14 | 2017 |    5 | 14 | Algorithms              |      15 | cs    |
+|         13 |          3 | 2016 |    3 |  3 | Advanced programming    |      20 | cs    |
+|         13 |         13 | 2015 |    3 | 13 | Applications            |       5 | all   |
+|         13 |         14 | 2016 |   10 | 14 | Algorithms              |      15 | cs    |
+|         14 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         14 |          3 | 2015 |    6 |  3 | Advanced programming    |      20 | cs    |
+|         15 |          0 | 2017 |    5 |  0 | Calculus                |      10 | mat   |
+|         15 |          5 | 2015 |    6 |  5 | Computer networks       |      10 | cs    |
+|         15 |          8 | 2016 |    7 |  8 | Calculus 2              |      10 | mat   |
+|         15 |         10 | 2017 |   10 | 10 | Hardware                |      10 | cs    |
+|         15 |         11 | 2015 |    9 | 11 | Physics                 |      10 | ph    |
+|         15 |         12 | 2015 |    9 | 12 | Computer science        |      10 | cs    |
+|         16 |          1 | 2016 |   10 |  1 | Gaulois theory          |       5 | mat   |
+|         16 |          7 | 2015 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         16 |          9 | 2016 |    4 |  9 | Data mining             |      15 | mat   |
+|         17 |          1 | 2015 |    4 |  1 | Gaulois theory          |       5 | mat   |
+|         17 |          2 | 2016 |    3 |  2 | Intro to programming    |      20 | cs    |
+|         17 |          3 | 2016 |    4 |  3 | Advanced programming    |      20 | cs    |
+|         17 |          3 | 2017 |    6 |  3 | Advanced programming    |      20 | cs    |
+|         17 |          4 | 2015 |    6 |  4 | Compilers               |      15 | cs    |
+|         17 |          4 | 2016 |    6 |  4 | Compilers               |      15 | cs    |
+|         17 |          6 | 2016 |   10 |  6 | Algebra                 |      15 | mat   |
+|         17 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         17 |          9 | 2016 |    6 |  9 | Data mining             |      15 | mat   |
+|         17 |         11 | 2017 |    8 | 11 | Physics                 |      10 | ph    |
+|         17 |         14 | 2017 |    4 | 14 | Algorithms              |      15 | cs    |
+|         18 |          0 | 2016 |    4 |  0 | Calculus                |      10 | mat   |
+|         18 |          3 | 2016 |    5 |  3 | Advanced programming    |      20 | cs    |
+|         18 |          4 | 2017 |    6 |  4 | Compilers               |      15 | cs    |
+|         18 |          5 | 2017 |    7 |  5 | Computer networks       |      10 | cs    |
+|         18 |          6 | 2017 |    7 |  6 | Algebra                 |      15 | mat   |
+|         18 |          7 | 2016 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         19 |          4 | 2015 |    7 |  4 | Compilers               |      15 | cs    |
+|         19 |          6 | 2015 |    6 |  6 | Algebra                 |      15 | mat   |
+|         19 |          8 | 2016 |    9 |  8 | Calculus 2              |      10 | mat   |
+|         19 |          8 | 2017 |   10 |  8 | Calculus 2              |      10 | mat   |
+|         19 |         10 | 2015 |    4 | 10 | Hardware                |      10 | cs    |
+|         19 |         14 | 2015 |    9 | 14 | Algorithms              |      15 | cs    |
+|         20 |          0 | 2017 |    3 |  0 | Calculus                |      10 | mat   |
+|         20 |          1 | 2016 |    9 |  1 | Gaulois theory          |       5 | mat   |
+|         20 |          2 | 2015 |    9 |  2 | Intro to programming    |      20 | cs    |
+|         20 |          4 | 2017 |   10 |  4 | Compilers               |      15 | cs    |
+|         20 |          5 | 2016 |    9 |  5 | Computer networks       |      10 | cs    |
+|         20 |         10 | 2017 |    9 | 10 | Hardware                |      10 | cs    |
+|         20 |         12 | 2015 |    4 | 12 | Computer science        |      10 | cs    |
+|         20 |         13 | 2017 |   10 | 13 | Applications            |       5 | all   |
+|         20 |         14 | 2016 |    8 | 14 | Algorithms              |      15 | cs    |
+|         21 |          3 | 2017 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         21 |          6 | 2015 |    3 |  6 | Algebra                 |      15 | mat   |
+|         21 |          7 | 2017 |    6 |  7 | Artificial Intelligence |      20 | cs    |
+|         21 |          8 | 2017 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         21 |         12 | 2017 |    9 | 12 | Computer science        |      10 | cs    |
+|         21 |         14 | 2016 |    5 | 14 | Algorithms              |      15 | cs    |
+|         22 |          5 | 2016 |   10 |  5 | Computer networks       |      10 | cs    |
+|         22 |         11 | 2016 |    3 | 11 | Physics                 |      10 | ph    |
+|         22 |         13 | 2015 |    6 | 13 | Applications            |       5 | all   |
+|         22 |         13 | 2016 |   10 | 13 | Applications            |       5 | all   |
+|         23 |          0 | 2015 |    9 |  0 | Calculus                |      10 | mat   |
+|         23 |          0 | 2016 |    3 |  0 | Calculus                |      10 | mat   |
+|         23 |          0 | 2017 |    4 |  0 | Calculus                |      10 | mat   |
+|         23 |          1 | 2017 |    8 |  1 | Gaulois theory          |       5 | mat   |
+|         23 |          2 | 2016 |    4 |  2 | Intro to programming    |      20 | cs    |
+|         24 |          1 | 2015 |    4 |  1 | Gaulois theory          |       5 | mat   |
+|         24 |          1 | 2016 |    5 |  1 | Gaulois theory          |       5 | mat   |
+|         24 |          2 | 2015 |    7 |  2 | Intro to programming    |      20 | cs    |
+|         24 |          2 | 2016 |    9 |  2 | Intro to programming    |      20 | cs    |
+|         24 |          4 | 2017 |    4 |  4 | Compilers               |      15 | cs    |
+|         25 |          2 | 2015 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         25 |          4 | 2016 |   10 |  4 | Compilers               |      15 | cs    |
+|         25 |          7 | 2015 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         25 |         11 | 2015 |    7 | 11 | Physics                 |      10 | ph    |
+|         26 |          0 | 2017 |    8 |  0 | Calculus                |      10 | mat   |
+|         26 |          6 | 2015 |    4 |  6 | Algebra                 |      15 | mat   |
+|         26 |          7 | 2015 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         26 |          7 | 2016 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         26 |          9 | 2016 |    3 |  9 | Data mining             |      15 | mat   |
+|         26 |         10 | 2015 |    3 | 10 | Hardware                |      10 | cs    |
+|         26 |         12 | 2016 |   10 | 12 | Computer science        |      10 | cs    |
+|         27 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         27 |          3 | 2015 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         27 |          4 | 2015 |    6 |  4 | Compilers               |      15 | cs    |
+|         27 |          7 | 2015 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         27 |          8 | 2015 |    3 |  8 | Calculus 2              |      10 | mat   |
+|         27 |          8 | 2017 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         27 |          9 | 2017 |    3 |  9 | Data mining             |      15 | mat   |
+|         28 |          0 | 2017 |   10 |  0 | Calculus                |      10 | mat   |
+|         28 |          2 | 2016 |    3 |  2 | Intro to programming    |      20 | cs    |
+|         28 |          6 | 2016 |    5 |  6 | Algebra                 |      15 | mat   |
+|         28 |          8 | 2015 |    4 |  8 | Calculus 2              |      10 | mat   |
+|         28 |          8 | 2017 |   10 |  8 | Calculus 2              |      10 | mat   |
+|         28 |         10 | 2017 |    9 | 10 | Hardware                |      10 | cs    |
+|         28 |         14 | 2015 |   10 | 14 | Algorithms              |      15 | cs    |
+|         28 |         14 | 2016 |    4 | 14 | Algorithms              |      15 | cs    |
+|         29 |          4 | 2016 |    9 |  4 | Compilers               |      15 | cs    |
+|         29 |          4 | 2017 |    3 |  4 | Compilers               |      15 | cs    |
+|         29 |          6 | 2016 |    5 |  6 | Algebra                 |      15 | mat   |
+|         29 |         10 | 2015 |    5 | 10 | Hardware                |      10 | cs    |
+|         29 |         12 | 2015 |   10 | 12 | Computer science        |      10 | cs    |
+|         29 |         12 | 2017 |    7 | 12 | Computer science        |      10 | cs    |
+|         29 |         13 | 2016 |    9 | 13 | Applications            |       5 | all   |
+|         29 |         14 | 2015 |    9 | 14 | Algorithms              |      15 | cs    |
+|         30 |          0 | 2015 |    4 |  0 | Calculus                |      10 | mat   |
+|         30 |          5 | 2015 |    9 |  5 | Computer networks       |      10 | cs    |
+|         30 |          7 | 2016 |    6 |  7 | Artificial Intelligence |      20 | cs    |
+|         31 |          1 | 2017 |    9 |  1 | Gaulois theory          |       5 | mat   |
+|         31 |          3 | 2016 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         31 |         11 | 2016 |    7 | 11 | Physics                 |      10 | ph    |
+|         32 |          3 | 2017 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         32 |          4 | 2016 |    4 |  4 | Compilers               |      15 | cs    |
+|         32 |          9 | 2016 |    5 |  9 | Data mining             |      15 | mat   |
+|         32 |         10 | 2017 |    5 | 10 | Hardware                |      10 | cs    |
+|         32 |         12 | 2015 |    7 | 12 | Computer science        |      10 | cs    |
+|         33 |          3 | 2016 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         33 |          5 | 2015 |    9 |  5 | Computer networks       |      10 | cs    |
+|         33 |          8 | 2016 |    5 |  8 | Calculus 2              |      10 | mat   |
+|         33 |          9 | 2015 |    4 |  9 | Data mining             |      15 | mat   |
+|         33 |          9 | 2016 |    7 |  9 | Data mining             |      15 | mat   |
+|         33 |         14 | 2016 |    9 | 14 | Algorithms              |      15 | cs    |
+|         34 |          1 | 2015 |   10 |  1 | Gaulois theory          |       5 | mat   |
+|         34 |          1 | 2016 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|         34 |          2 | 2015 |    3 |  2 | Intro to programming    |      20 | cs    |
+|         34 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         34 |          5 | 2015 |    5 |  5 | Computer networks       |      10 | cs    |
+|         34 |          5 | 2016 |    3 |  5 | Computer networks       |      10 | cs    |
+|         35 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         35 |          9 | 2016 |    6 |  9 | Data mining             |      15 | mat   |
+|         36 |          2 | 2017 |    7 |  2 | Intro to programming    |      20 | cs    |
+|         37 |          0 | 2017 |    7 |  0 | Calculus                |      10 | mat   |
+|         37 |          4 | 2016 |    4 |  4 | Compilers               |      15 | cs    |
+|         37 |          6 | 2016 |    9 |  6 | Algebra                 |      15 | mat   |
+|         38 |          3 | 2015 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         38 |          7 | 2016 |    9 |  7 | Artificial Intelligence |      20 | cs    |
+|         38 |          9 | 2015 |    8 |  9 | Data mining             |      15 | mat   |
+|         38 |         10 | 2016 |    8 | 10 | Hardware                |      10 | cs    |
+|         38 |         13 | 2017 |    8 | 13 | Applications            |       5 | all   |
+|         38 |         14 | 2016 |    5 | 14 | Algorithms              |      15 | cs    |
+|         39 |          1 | 2015 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|         39 |          1 | 2016 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|         39 |          2 | 2015 |    4 |  2 | Intro to programming    |      20 | cs    |
+|         39 |          3 | 2017 |    4 |  3 | Advanced programming    |      20 | cs    |
+|         39 |         14 | 2015 |   10 | 14 | Algorithms              |      15 | cs    |
+|         40 |          7 | 2015 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         40 |         11 | 2017 |   10 | 11 | Physics                 |      10 | ph    |
+|         40 |         13 | 2017 |    8 | 13 | Applications            |       5 | all   |
+|         41 |          2 | 2017 |    8 |  2 | Intro to programming    |      20 | cs    |
+|         41 |          3 | 2016 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         41 |          6 | 2016 |    6 |  6 | Algebra                 |      15 | mat   |
+|         41 |          8 | 2017 |    8 |  8 | Calculus 2              |      10 | mat   |
+|         41 |          9 | 2017 |    9 |  9 | Data mining             |      15 | mat   |
+|         41 |         13 | 2015 |    8 | 13 | Applications            |       5 | all   |
+|         41 |         13 | 2017 |    5 | 13 | Applications            |       5 | all   |
+|         42 |          0 | 2016 |    8 |  0 | Calculus                |      10 | mat   |
+|         42 |          1 | 2016 |   10 |  1 | Gaulois theory          |       5 | mat   |
+|         42 |          2 | 2015 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         42 |          2 | 2016 |    4 |  2 | Intro to programming    |      20 | cs    |
+|         42 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         42 |          6 | 2015 |    8 |  6 | Algebra                 |      15 | mat   |
+|         42 |         10 | 2016 |    4 | 10 | Hardware                |      10 | cs    |
+|         42 |         11 | 2017 |    3 | 11 | Physics                 |      10 | ph    |
+|         43 |          4 | 2015 |    5 |  4 | Compilers               |      15 | cs    |
+|         43 |          9 | 2017 |    3 |  9 | Data mining             |      15 | mat   |
+|         44 |          5 | 2016 |   10 |  5 | Computer networks       |      10 | cs    |
+|         44 |          6 | 2017 |    7 |  6 | Algebra                 |      15 | mat   |
+|         45 |          2 | 2017 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         45 |          3 | 2015 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         45 |          5 | 2015 |    4 |  5 | Computer networks       |      10 | cs    |
+|         45 |          7 | 2016 |    5 |  7 | Artificial Intelligence |      20 | cs    |
+|         45 |          8 | 2015 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         45 |         12 | 2016 |    9 | 12 | Computer science        |      10 | cs    |
+|         46 |          6 | 2015 |    5 |  6 | Algebra                 |      15 | mat   |
+|         46 |          8 | 2017 |    8 |  8 | Calculus 2              |      10 | mat   |
+|         46 |          9 | 2017 |    5 |  9 | Data mining             |      15 | mat   |
+|         46 |         14 | 2017 |    3 | 14 | Algorithms              |      15 | cs    |
++------------+------------+------+------+----+-------------------------+---------+-------+
+237 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Studies.year=2017;
++------------+------------+------+------+----+-------------------------+---------+-------+
+| student_id | subject_id | year | mark | id | name                    | credits | field |
++------------+------------+------+------+----+-------------------------+---------+-------+
+|          0 |         14 | 2017 |   10 | 14 | Algorithms              |      15 | cs    |
+|          1 |          6 | 2017 |    4 |  6 | Algebra                 |      15 | mat   |
+|          2 |          2 | 2017 |    6 |  2 | Intro to programming    |      20 | cs    |
+|          2 |         10 | 2017 |    7 | 10 | Hardware                |      10 | cs    |
+|          2 |         13 | 2017 |    5 | 13 | Applications            |       5 | all   |
+|          3 |          5 | 2017 |    6 |  5 | Computer networks       |      10 | cs    |
+|          3 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|          3 |          8 | 2017 |    9 |  8 | Calculus 2              |      10 | mat   |
+|          4 |          1 | 2017 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|          4 |          2 | 2017 |    3 |  2 | Intro to programming    |      20 | cs    |
+|          6 |         11 | 2017 |   10 | 11 | Physics                 |      10 | ph    |
+|          6 |         14 | 2017 |    6 | 14 | Algorithms              |      15 | cs    |
+|          7 |          3 | 2017 |    3 |  3 | Advanced programming    |      20 | cs    |
+|          8 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|          9 |          3 | 2017 |    9 |  3 | Advanced programming    |      20 | cs    |
+|          9 |         13 | 2017 |    9 | 13 | Applications            |       5 | all   |
+|         10 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         10 |          3 | 2017 |    5 |  3 | Advanced programming    |      20 | cs    |
+|         12 |         14 | 2017 |    5 | 14 | Algorithms              |      15 | cs    |
+|         14 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         15 |          0 | 2017 |    5 |  0 | Calculus                |      10 | mat   |
+|         15 |         10 | 2017 |   10 | 10 | Hardware                |      10 | cs    |
+|         17 |          3 | 2017 |    6 |  3 | Advanced programming    |      20 | cs    |
+|         17 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         17 |         11 | 2017 |    8 | 11 | Physics                 |      10 | ph    |
+|         17 |         14 | 2017 |    4 | 14 | Algorithms              |      15 | cs    |
+|         18 |          4 | 2017 |    6 |  4 | Compilers               |      15 | cs    |
+|         18 |          5 | 2017 |    7 |  5 | Computer networks       |      10 | cs    |
+|         18 |          6 | 2017 |    7 |  6 | Algebra                 |      15 | mat   |
+|         19 |          8 | 2017 |   10 |  8 | Calculus 2              |      10 | mat   |
+|         20 |          0 | 2017 |    3 |  0 | Calculus                |      10 | mat   |
+|         20 |          4 | 2017 |   10 |  4 | Compilers               |      15 | cs    |
+|         20 |         10 | 2017 |    9 | 10 | Hardware                |      10 | cs    |
+|         20 |         13 | 2017 |   10 | 13 | Applications            |       5 | all   |
+|         21 |          3 | 2017 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         21 |          7 | 2017 |    6 |  7 | Artificial Intelligence |      20 | cs    |
+|         21 |          8 | 2017 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         21 |         12 | 2017 |    9 | 12 | Computer science        |      10 | cs    |
+|         23 |          0 | 2017 |    4 |  0 | Calculus                |      10 | mat   |
+|         23 |          1 | 2017 |    8 |  1 | Gaulois theory          |       5 | mat   |
+|         24 |          4 | 2017 |    4 |  4 | Compilers               |      15 | cs    |
+|         26 |          0 | 2017 |    8 |  0 | Calculus                |      10 | mat   |
+|         27 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         27 |          8 | 2017 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         27 |          9 | 2017 |    3 |  9 | Data mining             |      15 | mat   |
+|         28 |          0 | 2017 |   10 |  0 | Calculus                |      10 | mat   |
+|         28 |          8 | 2017 |   10 |  8 | Calculus 2              |      10 | mat   |
+|         28 |         10 | 2017 |    9 | 10 | Hardware                |      10 | cs    |
+|         29 |          4 | 2017 |    3 |  4 | Compilers               |      15 | cs    |
+|         29 |         12 | 2017 |    7 | 12 | Computer science        |      10 | cs    |
+|         31 |          1 | 2017 |    9 |  1 | Gaulois theory          |       5 | mat   |
+|         32 |          3 | 2017 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         32 |         10 | 2017 |    5 | 10 | Hardware                |      10 | cs    |
+|         34 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         35 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         36 |          2 | 2017 |    7 |  2 | Intro to programming    |      20 | cs    |
+|         37 |          0 | 2017 |    7 |  0 | Calculus                |      10 | mat   |
+|         38 |         13 | 2017 |    8 | 13 | Applications            |       5 | all   |
+|         39 |          3 | 2017 |    4 |  3 | Advanced programming    |      20 | cs    |
+|         40 |         11 | 2017 |   10 | 11 | Physics                 |      10 | ph    |
+|         40 |         13 | 2017 |    8 | 13 | Applications            |       5 | all   |
+|         41 |          2 | 2017 |    8 |  2 | Intro to programming    |      20 | cs    |
+|         41 |          8 | 2017 |    8 |  8 | Calculus 2              |      10 | mat   |
+|         41 |          9 | 2017 |    9 |  9 | Data mining             |      15 | mat   |
+|         41 |         13 | 2017 |    5 | 13 | Applications            |       5 | all   |
+|         42 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         42 |         11 | 2017 |    3 | 11 | Physics                 |      10 | ph    |
+|         43 |          9 | 2017 |    3 |  9 | Data mining             |      15 | mat   |
+|         44 |          6 | 2017 |    7 |  6 | Algebra                 |      15 | mat   |
+|         45 |          2 | 2017 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         46 |          8 | 2017 |    8 |  8 | Calculus 2              |      10 | mat   |
+|         46 |          9 | 2017 |    5 |  9 | Data mining             |      15 | mat   |
+|         46 |         14 | 2017 |    3 | 14 | Algorithms              |      15 | cs    |
++------------+------------+------+------+----+-------------------------+---------+-------+
+73 rows in set (0.00 sec)
+
+mysql> SELECT Subjects.id, SUM(credits) FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Studies.year=2017 GROUP BY Subjects.id;
++----+--------------+
+| id | SUM(credits) |
++----+--------------+
+|  0 |           60 |
+|  1 |           30 |
+|  2 |          100 |
+|  3 |          200 |
+|  4 |           60 |
+|  5 |           20 |
+|  6 |           45 |
+|  7 |           80 |
+|  8 |           70 |
+|  9 |           60 |
+| 10 |           50 |
+| 11 |           40 |
+| 12 |           20 |
+| 13 |           30 |
+| 14 |           75 |
++----+--------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies;
++------------+------------+------+------+
+| student_id | subject_id | year | mark |
++------------+------------+------+------+
+|          0 |          2 | 2015 |    3 |
+|          0 |          2 | 2016 |    5 |
+|          0 |          4 | 2016 |    9 |
+|          0 |         11 | 2016 |   10 |
+|          0 |         14 | 2017 |   10 |
+|          1 |          6 | 2017 |    4 |
+|          1 |          9 | 2015 |    4 |
+|          1 |         10 | 2015 |    7 |
+|          1 |         10 | 2016 |   10 |
+|          1 |         12 | 2015 |    6 |
+|          1 |         13 | 2015 |    4 |
+|          2 |          2 | 2017 |    6 |
+|          2 |          5 | 2015 |    6 |
+|          2 |          5 | 2016 |    6 |
+|          2 |          7 | 2016 |    5 |
+|          2 |         10 | 2017 |    7 |
+|          2 |         13 | 2017 |    5 |
+|          3 |          5 | 2017 |    6 |
+|          3 |          7 | 2017 |    7 |
+|          3 |          8 | 2017 |    9 |
+|          3 |          9 | 2016 |    8 |
+|          3 |         11 | 2015 |    8 |
+|          4 |          1 | 2017 |    3 |
+|          4 |          2 | 2017 |    3 |
+|          4 |          8 | 2016 |   10 |
+|          5 |          8 | 2015 |    5 |
+|          6 |          2 | 2015 |    8 |
+|          6 |          4 | 2015 |    3 |
+|          6 |          7 | 2015 |    3 |
+|          6 |         11 | 2017 |   10 |
+|          6 |         14 | 2017 |    6 |
+|          7 |          1 | 2015 |    3 |
+|          7 |          3 | 2017 |    3 |
+|          7 |         10 | 2016 |    6 |
+|          7 |         11 | 2016 |    6 |
+|          7 |         12 | 2016 |    6 |
+|          7 |         13 | 2015 |    4 |
+|          8 |          1 | 2015 |    6 |
+|          8 |          2 | 2015 |    4 |
+|          8 |          3 | 2016 |    7 |
+|          8 |          4 | 2015 |    9 |
+|          8 |          6 | 2016 |    7 |
+|          8 |          7 | 2017 |    7 |
+|          8 |          8 | 2015 |    7 |
+|          8 |          9 | 2015 |    5 |
+|          9 |          3 | 2017 |    9 |
+|          9 |          6 | 2016 |    6 |
+|          9 |          7 | 2016 |   10 |
+|          9 |         13 | 2017 |    9 |
+|         10 |          0 | 2016 |    7 |
+|         10 |          1 | 2017 |    7 |
+|         10 |          3 | 2017 |    5 |
+|         10 |          7 | 2016 |   10 |
+|         10 |         10 | 2016 |    6 |
+|         11 |          2 | 2015 |    6 |
+|         11 |          5 | 2015 |    6 |
+|         11 |          8 | 2015 |    3 |
+|         11 |         10 | 2015 |    5 |
+|         12 |          4 | 2015 |    7 |
+|         12 |          5 | 2015 |    9 |
+|         12 |          7 | 2016 |    8 |
+|         12 |         10 | 2015 |    3 |
+|         12 |         11 | 2016 |    5 |
+|         12 |         13 | 2015 |    8 |
+|         12 |         14 | 2017 |    5 |
+|         13 |          3 | 2016 |    3 |
+|         13 |         13 | 2015 |    3 |
+|         13 |         14 | 2016 |   10 |
+|         14 |          1 | 2017 |    7 |
+|         14 |          3 | 2015 |    6 |
+|         15 |          0 | 2017 |    5 |
+|         15 |          5 | 2015 |    6 |
+|         15 |          8 | 2016 |    7 |
+|         15 |         10 | 2017 |   10 |
+|         15 |         11 | 2015 |    9 |
+|         15 |         12 | 2015 |    9 |
+|         16 |          1 | 2016 |   10 |
+|         16 |          7 | 2015 |    7 |
+|         16 |          9 | 2016 |    4 |
+|         17 |          1 | 2015 |    4 |
+|         17 |          2 | 2016 |    3 |
+|         17 |          3 | 2016 |    4 |
+|         17 |          3 | 2017 |    6 |
+|         17 |          4 | 2015 |    6 |
+|         17 |          4 | 2016 |    6 |
+|         17 |          6 | 2016 |   10 |
+|         17 |          7 | 2017 |    7 |
+|         17 |          9 | 2016 |    6 |
+|         17 |         11 | 2017 |    8 |
+|         17 |         14 | 2017 |    4 |
+|         18 |          0 | 2016 |    4 |
+|         18 |          3 | 2016 |    5 |
+|         18 |          4 | 2017 |    6 |
+|         18 |          5 | 2017 |    7 |
+|         18 |          6 | 2017 |    7 |
+|         18 |          7 | 2016 |    4 |
+|         19 |          4 | 2015 |    7 |
+|         19 |          6 | 2015 |    6 |
+|         19 |          8 | 2016 |    9 |
+|         19 |          8 | 2017 |   10 |
+|         19 |         10 | 2015 |    4 |
+|         19 |         14 | 2015 |    9 |
+|         20 |          0 | 2017 |    3 |
+|         20 |          1 | 2016 |    9 |
+|         20 |          2 | 2015 |    9 |
+|         20 |          4 | 2017 |   10 |
+|         20 |          5 | 2016 |    9 |
+|         20 |         10 | 2017 |    9 |
+|         20 |         12 | 2015 |    4 |
+|         20 |         13 | 2017 |   10 |
+|         20 |         14 | 2016 |    8 |
+|         21 |          3 | 2017 |    7 |
+|         21 |          6 | 2015 |    3 |
+|         21 |          7 | 2017 |    6 |
+|         21 |          8 | 2017 |    6 |
+|         21 |         12 | 2017 |    9 |
+|         21 |         14 | 2016 |    5 |
+|         22 |          5 | 2016 |   10 |
+|         22 |         11 | 2016 |    3 |
+|         22 |         13 | 2015 |    6 |
+|         22 |         13 | 2016 |   10 |
+|         23 |          0 | 2015 |    9 |
+|         23 |          0 | 2016 |    3 |
+|         23 |          0 | 2017 |    4 |
+|         23 |          1 | 2017 |    8 |
+|         23 |          2 | 2016 |    4 |
+|         24 |          1 | 2015 |    4 |
+|         24 |          1 | 2016 |    5 |
+|         24 |          2 | 2015 |    7 |
+|         24 |          2 | 2016 |    9 |
+|         24 |          4 | 2017 |    4 |
+|         25 |          2 | 2015 |    6 |
+|         25 |          4 | 2016 |   10 |
+|         25 |          7 | 2015 |    4 |
+|         25 |         11 | 2015 |    7 |
+|         26 |          0 | 2017 |    8 |
+|         26 |          6 | 2015 |    4 |
+|         26 |          7 | 2015 |    4 |
+|         26 |          7 | 2016 |    4 |
+|         26 |          9 | 2016 |    3 |
+|         26 |         10 | 2015 |    3 |
+|         26 |         12 | 2016 |   10 |
+|         27 |          1 | 2017 |    7 |
+|         27 |          3 | 2015 |    8 |
+|         27 |          4 | 2015 |    6 |
+|         27 |          7 | 2015 |    7 |
+|         27 |          8 | 2015 |    3 |
+|         27 |          8 | 2017 |    6 |
+|         27 |          9 | 2017 |    3 |
+|         28 |          0 | 2017 |   10 |
+|         28 |          2 | 2016 |    3 |
+|         28 |          6 | 2016 |    5 |
+|         28 |          8 | 2015 |    4 |
+|         28 |          8 | 2017 |   10 |
+|         28 |         10 | 2017 |    9 |
+|         28 |         14 | 2015 |   10 |
+|         28 |         14 | 2016 |    4 |
+|         29 |          4 | 2016 |    9 |
+|         29 |          4 | 2017 |    3 |
+|         29 |          6 | 2016 |    5 |
+|         29 |         10 | 2015 |    5 |
+|         29 |         12 | 2015 |   10 |
+|         29 |         12 | 2017 |    7 |
+|         29 |         13 | 2016 |    9 |
+|         29 |         14 | 2015 |    9 |
+|         30 |          0 | 2015 |    4 |
+|         30 |          5 | 2015 |    9 |
+|         30 |          7 | 2016 |    6 |
+|         31 |          1 | 2017 |    9 |
+|         31 |          3 | 2016 |    9 |
+|         31 |         11 | 2016 |    7 |
+|         32 |          3 | 2017 |    9 |
+|         32 |          4 | 2016 |    4 |
+|         32 |          9 | 2016 |    5 |
+|         32 |         10 | 2017 |    5 |
+|         32 |         12 | 2015 |    7 |
+|         33 |          3 | 2016 |    9 |
+|         33 |          5 | 2015 |    9 |
+|         33 |          8 | 2016 |    5 |
+|         33 |          9 | 2015 |    4 |
+|         33 |          9 | 2016 |    7 |
+|         33 |         14 | 2016 |    9 |
+|         34 |          1 | 2015 |   10 |
+|         34 |          1 | 2016 |    3 |
+|         34 |          2 | 2015 |    3 |
+|         34 |          3 | 2017 |    8 |
+|         34 |          5 | 2015 |    5 |
+|         34 |          5 | 2016 |    3 |
+|         35 |          3 | 2017 |    8 |
+|         35 |          9 | 2016 |    6 |
+|         36 |          2 | 2017 |    7 |
+|         37 |          0 | 2017 |    7 |
+|         37 |          4 | 2016 |    4 |
+|         37 |          6 | 2016 |    9 |
+|         38 |          3 | 2015 |    7 |
+|         38 |          7 | 2016 |    9 |
+|         38 |          9 | 2015 |    8 |
+|         38 |         10 | 2016 |    8 |
+|         38 |         13 | 2017 |    8 |
+|         38 |         14 | 2016 |    5 |
+|         39 |          1 | 2015 |    3 |
+|         39 |          1 | 2016 |    3 |
+|         39 |          2 | 2015 |    4 |
+|         39 |          3 | 2017 |    4 |
+|         39 |         14 | 2015 |   10 |
+|         40 |          7 | 2015 |    4 |
+|         40 |         11 | 2017 |   10 |
+|         40 |         13 | 2017 |    8 |
+|         41 |          2 | 2017 |    8 |
+|         41 |          3 | 2016 |    9 |
+|         41 |          6 | 2016 |    6 |
+|         41 |          8 | 2017 |    8 |
+|         41 |          9 | 2017 |    9 |
+|         41 |         13 | 2015 |    8 |
+|         41 |         13 | 2017 |    5 |
+|         42 |          0 | 2016 |    8 |
+|         42 |          1 | 2016 |   10 |
+|         42 |          2 | 2015 |    6 |
+|         42 |          2 | 2016 |    4 |
+|         42 |          3 | 2017 |    8 |
+|         42 |          6 | 2015 |    8 |
+|         42 |         10 | 2016 |    4 |
+|         42 |         11 | 2017 |    3 |
+|         43 |          4 | 2015 |    5 |
+|         43 |          9 | 2017 |    3 |
+|         44 |          5 | 2016 |   10 |
+|         44 |          6 | 2017 |    7 |
+|         45 |          2 | 2017 |    6 |
+|         45 |          3 | 2015 |    7 |
+|         45 |          5 | 2015 |    4 |
+|         45 |          7 | 2016 |    5 |
+|         45 |          8 | 2015 |    6 |
+|         45 |         12 | 2016 |    9 |
+|         46 |          6 | 2015 |    5 |
+|         46 |          8 | 2017 |    8 |
+|         46 |          9 | 2017 |    5 |
+|         46 |         14 | 2017 |    3 |
++------------+------------+------+------+
+237 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id;
++------------+------------+------+------+----+-------------------------+---------+-------+
+| student_id | subject_id | year | mark | id | name                    | credits | field |
++------------+------------+------+------+----+-------------------------+---------+-------+
+|          0 |          2 | 2015 |    3 |  2 | Intro to programming    |      20 | cs    |
+|          0 |          2 | 2016 |    5 |  2 | Intro to programming    |      20 | cs    |
+|          0 |          4 | 2016 |    9 |  4 | Compilers               |      15 | cs    |
+|          0 |         11 | 2016 |   10 | 11 | Physics                 |      10 | ph    |
+|          0 |         14 | 2017 |   10 | 14 | Algorithms              |      15 | cs    |
+|          1 |          6 | 2017 |    4 |  6 | Algebra                 |      15 | mat   |
+|          1 |          9 | 2015 |    4 |  9 | Data mining             |      15 | mat   |
+|          1 |         10 | 2015 |    7 | 10 | Hardware                |      10 | cs    |
+|          1 |         10 | 2016 |   10 | 10 | Hardware                |      10 | cs    |
+|          1 |         12 | 2015 |    6 | 12 | Computer science        |      10 | cs    |
+|          1 |         13 | 2015 |    4 | 13 | Applications            |       5 | all   |
+|          2 |          2 | 2017 |    6 |  2 | Intro to programming    |      20 | cs    |
+|          2 |          5 | 2015 |    6 |  5 | Computer networks       |      10 | cs    |
+|          2 |          5 | 2016 |    6 |  5 | Computer networks       |      10 | cs    |
+|          2 |          7 | 2016 |    5 |  7 | Artificial Intelligence |      20 | cs    |
+|          2 |         10 | 2017 |    7 | 10 | Hardware                |      10 | cs    |
+|          2 |         13 | 2017 |    5 | 13 | Applications            |       5 | all   |
+|          3 |          5 | 2017 |    6 |  5 | Computer networks       |      10 | cs    |
+|          3 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|          3 |          8 | 2017 |    9 |  8 | Calculus 2              |      10 | mat   |
+|          3 |          9 | 2016 |    8 |  9 | Data mining             |      15 | mat   |
+|          3 |         11 | 2015 |    8 | 11 | Physics                 |      10 | ph    |
+|          4 |          1 | 2017 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|          4 |          2 | 2017 |    3 |  2 | Intro to programming    |      20 | cs    |
+|          4 |          8 | 2016 |   10 |  8 | Calculus 2              |      10 | mat   |
+|          5 |          8 | 2015 |    5 |  8 | Calculus 2              |      10 | mat   |
+|          6 |          2 | 2015 |    8 |  2 | Intro to programming    |      20 | cs    |
+|          6 |          4 | 2015 |    3 |  4 | Compilers               |      15 | cs    |
+|          6 |          7 | 2015 |    3 |  7 | Artificial Intelligence |      20 | cs    |
+|          6 |         11 | 2017 |   10 | 11 | Physics                 |      10 | ph    |
+|          6 |         14 | 2017 |    6 | 14 | Algorithms              |      15 | cs    |
+|          7 |          1 | 2015 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|          7 |          3 | 2017 |    3 |  3 | Advanced programming    |      20 | cs    |
+|          7 |         10 | 2016 |    6 | 10 | Hardware                |      10 | cs    |
+|          7 |         11 | 2016 |    6 | 11 | Physics                 |      10 | ph    |
+|          7 |         12 | 2016 |    6 | 12 | Computer science        |      10 | cs    |
+|          7 |         13 | 2015 |    4 | 13 | Applications            |       5 | all   |
+|          8 |          1 | 2015 |    6 |  1 | Gaulois theory          |       5 | mat   |
+|          8 |          2 | 2015 |    4 |  2 | Intro to programming    |      20 | cs    |
+|          8 |          3 | 2016 |    7 |  3 | Advanced programming    |      20 | cs    |
+|          8 |          4 | 2015 |    9 |  4 | Compilers               |      15 | cs    |
+|          8 |          6 | 2016 |    7 |  6 | Algebra                 |      15 | mat   |
+|          8 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|          8 |          8 | 2015 |    7 |  8 | Calculus 2              |      10 | mat   |
+|          8 |          9 | 2015 |    5 |  9 | Data mining             |      15 | mat   |
+|          9 |          3 | 2017 |    9 |  3 | Advanced programming    |      20 | cs    |
+|          9 |          6 | 2016 |    6 |  6 | Algebra                 |      15 | mat   |
+|          9 |          7 | 2016 |   10 |  7 | Artificial Intelligence |      20 | cs    |
+|          9 |         13 | 2017 |    9 | 13 | Applications            |       5 | all   |
+|         10 |          0 | 2016 |    7 |  0 | Calculus                |      10 | mat   |
+|         10 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         10 |          3 | 2017 |    5 |  3 | Advanced programming    |      20 | cs    |
+|         10 |          7 | 2016 |   10 |  7 | Artificial Intelligence |      20 | cs    |
+|         10 |         10 | 2016 |    6 | 10 | Hardware                |      10 | cs    |
+|         11 |          2 | 2015 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         11 |          5 | 2015 |    6 |  5 | Computer networks       |      10 | cs    |
+|         11 |          8 | 2015 |    3 |  8 | Calculus 2              |      10 | mat   |
+|         11 |         10 | 2015 |    5 | 10 | Hardware                |      10 | cs    |
+|         12 |          4 | 2015 |    7 |  4 | Compilers               |      15 | cs    |
+|         12 |          5 | 2015 |    9 |  5 | Computer networks       |      10 | cs    |
+|         12 |          7 | 2016 |    8 |  7 | Artificial Intelligence |      20 | cs    |
+|         12 |         10 | 2015 |    3 | 10 | Hardware                |      10 | cs    |
+|         12 |         11 | 2016 |    5 | 11 | Physics                 |      10 | ph    |
+|         12 |         13 | 2015 |    8 | 13 | Applications            |       5 | all   |
+|         12 |         14 | 2017 |    5 | 14 | Algorithms              |      15 | cs    |
+|         13 |          3 | 2016 |    3 |  3 | Advanced programming    |      20 | cs    |
+|         13 |         13 | 2015 |    3 | 13 | Applications            |       5 | all   |
+|         13 |         14 | 2016 |   10 | 14 | Algorithms              |      15 | cs    |
+|         14 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         14 |          3 | 2015 |    6 |  3 | Advanced programming    |      20 | cs    |
+|         15 |          0 | 2017 |    5 |  0 | Calculus                |      10 | mat   |
+|         15 |          5 | 2015 |    6 |  5 | Computer networks       |      10 | cs    |
+|         15 |          8 | 2016 |    7 |  8 | Calculus 2              |      10 | mat   |
+|         15 |         10 | 2017 |   10 | 10 | Hardware                |      10 | cs    |
+|         15 |         11 | 2015 |    9 | 11 | Physics                 |      10 | ph    |
+|         15 |         12 | 2015 |    9 | 12 | Computer science        |      10 | cs    |
+|         16 |          1 | 2016 |   10 |  1 | Gaulois theory          |       5 | mat   |
+|         16 |          7 | 2015 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         16 |          9 | 2016 |    4 |  9 | Data mining             |      15 | mat   |
+|         17 |          1 | 2015 |    4 |  1 | Gaulois theory          |       5 | mat   |
+|         17 |          2 | 2016 |    3 |  2 | Intro to programming    |      20 | cs    |
+|         17 |          3 | 2016 |    4 |  3 | Advanced programming    |      20 | cs    |
+|         17 |          3 | 2017 |    6 |  3 | Advanced programming    |      20 | cs    |
+|         17 |          4 | 2015 |    6 |  4 | Compilers               |      15 | cs    |
+|         17 |          4 | 2016 |    6 |  4 | Compilers               |      15 | cs    |
+|         17 |          6 | 2016 |   10 |  6 | Algebra                 |      15 | mat   |
+|         17 |          7 | 2017 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         17 |          9 | 2016 |    6 |  9 | Data mining             |      15 | mat   |
+|         17 |         11 | 2017 |    8 | 11 | Physics                 |      10 | ph    |
+|         17 |         14 | 2017 |    4 | 14 | Algorithms              |      15 | cs    |
+|         18 |          0 | 2016 |    4 |  0 | Calculus                |      10 | mat   |
+|         18 |          3 | 2016 |    5 |  3 | Advanced programming    |      20 | cs    |
+|         18 |          4 | 2017 |    6 |  4 | Compilers               |      15 | cs    |
+|         18 |          5 | 2017 |    7 |  5 | Computer networks       |      10 | cs    |
+|         18 |          6 | 2017 |    7 |  6 | Algebra                 |      15 | mat   |
+|         18 |          7 | 2016 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         19 |          4 | 2015 |    7 |  4 | Compilers               |      15 | cs    |
+|         19 |          6 | 2015 |    6 |  6 | Algebra                 |      15 | mat   |
+|         19 |          8 | 2016 |    9 |  8 | Calculus 2              |      10 | mat   |
+|         19 |          8 | 2017 |   10 |  8 | Calculus 2              |      10 | mat   |
+|         19 |         10 | 2015 |    4 | 10 | Hardware                |      10 | cs    |
+|         19 |         14 | 2015 |    9 | 14 | Algorithms              |      15 | cs    |
+|         20 |          0 | 2017 |    3 |  0 | Calculus                |      10 | mat   |
+|         20 |          1 | 2016 |    9 |  1 | Gaulois theory          |       5 | mat   |
+|         20 |          2 | 2015 |    9 |  2 | Intro to programming    |      20 | cs    |
+|         20 |          4 | 2017 |   10 |  4 | Compilers               |      15 | cs    |
+|         20 |          5 | 2016 |    9 |  5 | Computer networks       |      10 | cs    |
+|         20 |         10 | 2017 |    9 | 10 | Hardware                |      10 | cs    |
+|         20 |         12 | 2015 |    4 | 12 | Computer science        |      10 | cs    |
+|         20 |         13 | 2017 |   10 | 13 | Applications            |       5 | all   |
+|         20 |         14 | 2016 |    8 | 14 | Algorithms              |      15 | cs    |
+|         21 |          3 | 2017 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         21 |          6 | 2015 |    3 |  6 | Algebra                 |      15 | mat   |
+|         21 |          7 | 2017 |    6 |  7 | Artificial Intelligence |      20 | cs    |
+|         21 |          8 | 2017 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         21 |         12 | 2017 |    9 | 12 | Computer science        |      10 | cs    |
+|         21 |         14 | 2016 |    5 | 14 | Algorithms              |      15 | cs    |
+|         22 |          5 | 2016 |   10 |  5 | Computer networks       |      10 | cs    |
+|         22 |         11 | 2016 |    3 | 11 | Physics                 |      10 | ph    |
+|         22 |         13 | 2015 |    6 | 13 | Applications            |       5 | all   |
+|         22 |         13 | 2016 |   10 | 13 | Applications            |       5 | all   |
+|         23 |          0 | 2015 |    9 |  0 | Calculus                |      10 | mat   |
+|         23 |          0 | 2016 |    3 |  0 | Calculus                |      10 | mat   |
+|         23 |          0 | 2017 |    4 |  0 | Calculus                |      10 | mat   |
+|         23 |          1 | 2017 |    8 |  1 | Gaulois theory          |       5 | mat   |
+|         23 |          2 | 2016 |    4 |  2 | Intro to programming    |      20 | cs    |
+|         24 |          1 | 2015 |    4 |  1 | Gaulois theory          |       5 | mat   |
+|         24 |          1 | 2016 |    5 |  1 | Gaulois theory          |       5 | mat   |
+|         24 |          2 | 2015 |    7 |  2 | Intro to programming    |      20 | cs    |
+|         24 |          2 | 2016 |    9 |  2 | Intro to programming    |      20 | cs    |
+|         24 |          4 | 2017 |    4 |  4 | Compilers               |      15 | cs    |
+|         25 |          2 | 2015 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         25 |          4 | 2016 |   10 |  4 | Compilers               |      15 | cs    |
+|         25 |          7 | 2015 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         25 |         11 | 2015 |    7 | 11 | Physics                 |      10 | ph    |
+|         26 |          0 | 2017 |    8 |  0 | Calculus                |      10 | mat   |
+|         26 |          6 | 2015 |    4 |  6 | Algebra                 |      15 | mat   |
+|         26 |          7 | 2015 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         26 |          7 | 2016 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         26 |          9 | 2016 |    3 |  9 | Data mining             |      15 | mat   |
+|         26 |         10 | 2015 |    3 | 10 | Hardware                |      10 | cs    |
+|         26 |         12 | 2016 |   10 | 12 | Computer science        |      10 | cs    |
+|         27 |          1 | 2017 |    7 |  1 | Gaulois theory          |       5 | mat   |
+|         27 |          3 | 2015 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         27 |          4 | 2015 |    6 |  4 | Compilers               |      15 | cs    |
+|         27 |          7 | 2015 |    7 |  7 | Artificial Intelligence |      20 | cs    |
+|         27 |          8 | 2015 |    3 |  8 | Calculus 2              |      10 | mat   |
+|         27 |          8 | 2017 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         27 |          9 | 2017 |    3 |  9 | Data mining             |      15 | mat   |
+|         28 |          0 | 2017 |   10 |  0 | Calculus                |      10 | mat   |
+|         28 |          2 | 2016 |    3 |  2 | Intro to programming    |      20 | cs    |
+|         28 |          6 | 2016 |    5 |  6 | Algebra                 |      15 | mat   |
+|         28 |          8 | 2015 |    4 |  8 | Calculus 2              |      10 | mat   |
+|         28 |          8 | 2017 |   10 |  8 | Calculus 2              |      10 | mat   |
+|         28 |         10 | 2017 |    9 | 10 | Hardware                |      10 | cs    |
+|         28 |         14 | 2015 |   10 | 14 | Algorithms              |      15 | cs    |
+|         28 |         14 | 2016 |    4 | 14 | Algorithms              |      15 | cs    |
+|         29 |          4 | 2016 |    9 |  4 | Compilers               |      15 | cs    |
+|         29 |          4 | 2017 |    3 |  4 | Compilers               |      15 | cs    |
+|         29 |          6 | 2016 |    5 |  6 | Algebra                 |      15 | mat   |
+|         29 |         10 | 2015 |    5 | 10 | Hardware                |      10 | cs    |
+|         29 |         12 | 2015 |   10 | 12 | Computer science        |      10 | cs    |
+|         29 |         12 | 2017 |    7 | 12 | Computer science        |      10 | cs    |
+|         29 |         13 | 2016 |    9 | 13 | Applications            |       5 | all   |
+|         29 |         14 | 2015 |    9 | 14 | Algorithms              |      15 | cs    |
+|         30 |          0 | 2015 |    4 |  0 | Calculus                |      10 | mat   |
+|         30 |          5 | 2015 |    9 |  5 | Computer networks       |      10 | cs    |
+|         30 |          7 | 2016 |    6 |  7 | Artificial Intelligence |      20 | cs    |
+|         31 |          1 | 2017 |    9 |  1 | Gaulois theory          |       5 | mat   |
+|         31 |          3 | 2016 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         31 |         11 | 2016 |    7 | 11 | Physics                 |      10 | ph    |
+|         32 |          3 | 2017 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         32 |          4 | 2016 |    4 |  4 | Compilers               |      15 | cs    |
+|         32 |          9 | 2016 |    5 |  9 | Data mining             |      15 | mat   |
+|         32 |         10 | 2017 |    5 | 10 | Hardware                |      10 | cs    |
+|         32 |         12 | 2015 |    7 | 12 | Computer science        |      10 | cs    |
+|         33 |          3 | 2016 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         33 |          5 | 2015 |    9 |  5 | Computer networks       |      10 | cs    |
+|         33 |          8 | 2016 |    5 |  8 | Calculus 2              |      10 | mat   |
+|         33 |          9 | 2015 |    4 |  9 | Data mining             |      15 | mat   |
+|         33 |          9 | 2016 |    7 |  9 | Data mining             |      15 | mat   |
+|         33 |         14 | 2016 |    9 | 14 | Algorithms              |      15 | cs    |
+|         34 |          1 | 2015 |   10 |  1 | Gaulois theory          |       5 | mat   |
+|         34 |          1 | 2016 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|         34 |          2 | 2015 |    3 |  2 | Intro to programming    |      20 | cs    |
+|         34 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         34 |          5 | 2015 |    5 |  5 | Computer networks       |      10 | cs    |
+|         34 |          5 | 2016 |    3 |  5 | Computer networks       |      10 | cs    |
+|         35 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         35 |          9 | 2016 |    6 |  9 | Data mining             |      15 | mat   |
+|         36 |          2 | 2017 |    7 |  2 | Intro to programming    |      20 | cs    |
+|         37 |          0 | 2017 |    7 |  0 | Calculus                |      10 | mat   |
+|         37 |          4 | 2016 |    4 |  4 | Compilers               |      15 | cs    |
+|         37 |          6 | 2016 |    9 |  6 | Algebra                 |      15 | mat   |
+|         38 |          3 | 2015 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         38 |          7 | 2016 |    9 |  7 | Artificial Intelligence |      20 | cs    |
+|         38 |          9 | 2015 |    8 |  9 | Data mining             |      15 | mat   |
+|         38 |         10 | 2016 |    8 | 10 | Hardware                |      10 | cs    |
+|         38 |         13 | 2017 |    8 | 13 | Applications            |       5 | all   |
+|         38 |         14 | 2016 |    5 | 14 | Algorithms              |      15 | cs    |
+|         39 |          1 | 2015 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|         39 |          1 | 2016 |    3 |  1 | Gaulois theory          |       5 | mat   |
+|         39 |          2 | 2015 |    4 |  2 | Intro to programming    |      20 | cs    |
+|         39 |          3 | 2017 |    4 |  3 | Advanced programming    |      20 | cs    |
+|         39 |         14 | 2015 |   10 | 14 | Algorithms              |      15 | cs    |
+|         40 |          7 | 2015 |    4 |  7 | Artificial Intelligence |      20 | cs    |
+|         40 |         11 | 2017 |   10 | 11 | Physics                 |      10 | ph    |
+|         40 |         13 | 2017 |    8 | 13 | Applications            |       5 | all   |
+|         41 |          2 | 2017 |    8 |  2 | Intro to programming    |      20 | cs    |
+|         41 |          3 | 2016 |    9 |  3 | Advanced programming    |      20 | cs    |
+|         41 |          6 | 2016 |    6 |  6 | Algebra                 |      15 | mat   |
+|         41 |          8 | 2017 |    8 |  8 | Calculus 2              |      10 | mat   |
+|         41 |          9 | 2017 |    9 |  9 | Data mining             |      15 | mat   |
+|         41 |         13 | 2015 |    8 | 13 | Applications            |       5 | all   |
+|         41 |         13 | 2017 |    5 | 13 | Applications            |       5 | all   |
+|         42 |          0 | 2016 |    8 |  0 | Calculus                |      10 | mat   |
+|         42 |          1 | 2016 |   10 |  1 | Gaulois theory          |       5 | mat   |
+|         42 |          2 | 2015 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         42 |          2 | 2016 |    4 |  2 | Intro to programming    |      20 | cs    |
+|         42 |          3 | 2017 |    8 |  3 | Advanced programming    |      20 | cs    |
+|         42 |          6 | 2015 |    8 |  6 | Algebra                 |      15 | mat   |
+|         42 |         10 | 2016 |    4 | 10 | Hardware                |      10 | cs    |
+|         42 |         11 | 2017 |    3 | 11 | Physics                 |      10 | ph    |
+|         43 |          4 | 2015 |    5 |  4 | Compilers               |      15 | cs    |
+|         43 |          9 | 2017 |    3 |  9 | Data mining             |      15 | mat   |
+|         44 |          5 | 2016 |   10 |  5 | Computer networks       |      10 | cs    |
+|         44 |          6 | 2017 |    7 |  6 | Algebra                 |      15 | mat   |
+|         45 |          2 | 2017 |    6 |  2 | Intro to programming    |      20 | cs    |
+|         45 |          3 | 2015 |    7 |  3 | Advanced programming    |      20 | cs    |
+|         45 |          5 | 2015 |    4 |  5 | Computer networks       |      10 | cs    |
+|         45 |          7 | 2016 |    5 |  7 | Artificial Intelligence |      20 | cs    |
+|         45 |          8 | 2015 |    6 |  8 | Calculus 2              |      10 | mat   |
+|         45 |         12 | 2016 |    9 | 12 | Computer science        |      10 | cs    |
+|         46 |          6 | 2015 |    5 |  6 | Algebra                 |      15 | mat   |
+|         46 |          8 | 2017 |    8 |  8 | Calculus 2              |      10 | mat   |
+|         46 |          9 | 2017 |    5 |  9 | Data mining             |      15 | mat   |
+|         46 |         14 | 2017 |    3 | 14 | Algorithms              |      15 | cs    |
++------------+------------+------+------+----+-------------------------+---------+-------+
+237 rows in set (0.00 sec)
+
+mysql> SELECT Studies.mark, Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs", Studies.mark>=5;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' Studies.mark>=5' at line 1
+mysql> SELECT Studies.mark, Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs";
++------+------+
+| mark | year |
++------+------+
+|    3 | 2015 |
+|    5 | 2016 |
+|    9 | 2016 |
+|   10 | 2017 |
+|    7 | 2015 |
+|   10 | 2016 |
+|    6 | 2015 |
+|    6 | 2017 |
+|    6 | 2015 |
+|    6 | 2016 |
+|    5 | 2016 |
+|    7 | 2017 |
+|    6 | 2017 |
+|    7 | 2017 |
+|    3 | 2017 |
+|    8 | 2015 |
+|    3 | 2015 |
+|    3 | 2015 |
+|    6 | 2017 |
+|    3 | 2017 |
+|    6 | 2016 |
+|    6 | 2016 |
+|    4 | 2015 |
+|    7 | 2016 |
+|    9 | 2015 |
+|    7 | 2017 |
+|    9 | 2017 |
+|   10 | 2016 |
+|    5 | 2017 |
+|   10 | 2016 |
+|    6 | 2016 |
+|    6 | 2015 |
+|    6 | 2015 |
+|    5 | 2015 |
+|    7 | 2015 |
+|    9 | 2015 |
+|    8 | 2016 |
+|    3 | 2015 |
+|    5 | 2017 |
+|    3 | 2016 |
+|   10 | 2016 |
+|    6 | 2015 |
+|    6 | 2015 |
+|   10 | 2017 |
+|    9 | 2015 |
+|    7 | 2015 |
+|    3 | 2016 |
+|    4 | 2016 |
+|    6 | 2017 |
+|    6 | 2015 |
+|    6 | 2016 |
+|    7 | 2017 |
+|    4 | 2017 |
+|    5 | 2016 |
+|    6 | 2017 |
+|    7 | 2017 |
+|    4 | 2016 |
+|    7 | 2015 |
+|    4 | 2015 |
+|    9 | 2015 |
+|    9 | 2015 |
+|   10 | 2017 |
+|    9 | 2016 |
+|    9 | 2017 |
+|    4 | 2015 |
+|    8 | 2016 |
+|    7 | 2017 |
+|    6 | 2017 |
+|    9 | 2017 |
+|    5 | 2016 |
+|   10 | 2016 |
+|    4 | 2016 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    4 | 2017 |
+|    6 | 2015 |
+|   10 | 2016 |
+|    4 | 2015 |
+|    4 | 2015 |
+|    4 | 2016 |
+|    3 | 2015 |
+|   10 | 2016 |
+|    8 | 2015 |
+|    6 | 2015 |
+|    7 | 2015 |
+|    3 | 2016 |
+|    9 | 2017 |
+|   10 | 2015 |
+|    4 | 2016 |
+|    9 | 2016 |
+|    3 | 2017 |
+|    5 | 2015 |
+|   10 | 2015 |
+|    7 | 2017 |
+|    9 | 2015 |
+|    9 | 2015 |
+|    6 | 2016 |
+|    9 | 2016 |
+|    9 | 2017 |
+|    4 | 2016 |
+|    5 | 2017 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    9 | 2015 |
+|    9 | 2016 |
+|    3 | 2015 |
+|    8 | 2017 |
+|    5 | 2015 |
+|    3 | 2016 |
+|    8 | 2017 |
+|    7 | 2017 |
+|    4 | 2016 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    8 | 2016 |
+|    5 | 2016 |
+|    4 | 2015 |
+|    4 | 2017 |
+|   10 | 2015 |
+|    4 | 2015 |
+|    8 | 2017 |
+|    9 | 2016 |
+|    6 | 2015 |
+|    4 | 2016 |
+|    8 | 2017 |
+|    4 | 2016 |
+|    5 | 2015 |
+|   10 | 2016 |
+|    6 | 2017 |
+|    7 | 2015 |
+|    4 | 2015 |
+|    5 | 2016 |
+|    9 | 2016 |
+|    3 | 2017 |
++------+------+
+134 rows in set (0.10 sec)
+
+mysql> SELECT Studies.mark, Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5;
++------+------+
+| mark | year |
++------+------+
+|    5 | 2016 |
+|    9 | 2016 |
+|   10 | 2017 |
+|    7 | 2015 |
+|   10 | 2016 |
+|    6 | 2015 |
+|    6 | 2017 |
+|    6 | 2015 |
+|    6 | 2016 |
+|    5 | 2016 |
+|    7 | 2017 |
+|    6 | 2017 |
+|    7 | 2017 |
+|    8 | 2015 |
+|    6 | 2017 |
+|    6 | 2016 |
+|    6 | 2016 |
+|    7 | 2016 |
+|    9 | 2015 |
+|    7 | 2017 |
+|    9 | 2017 |
+|   10 | 2016 |
+|    5 | 2017 |
+|   10 | 2016 |
+|    6 | 2016 |
+|    6 | 2015 |
+|    6 | 2015 |
+|    5 | 2015 |
+|    7 | 2015 |
+|    9 | 2015 |
+|    8 | 2016 |
+|    5 | 2017 |
+|   10 | 2016 |
+|    6 | 2015 |
+|    6 | 2015 |
+|   10 | 2017 |
+|    9 | 2015 |
+|    7 | 2015 |
+|    6 | 2017 |
+|    6 | 2015 |
+|    6 | 2016 |
+|    7 | 2017 |
+|    5 | 2016 |
+|    6 | 2017 |
+|    7 | 2017 |
+|    7 | 2015 |
+|    9 | 2015 |
+|    9 | 2015 |
+|   10 | 2017 |
+|    9 | 2016 |
+|    9 | 2017 |
+|    8 | 2016 |
+|    7 | 2017 |
+|    6 | 2017 |
+|    9 | 2017 |
+|    5 | 2016 |
+|   10 | 2016 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    6 | 2015 |
+|   10 | 2016 |
+|   10 | 2016 |
+|    8 | 2015 |
+|    6 | 2015 |
+|    7 | 2015 |
+|    9 | 2017 |
+|   10 | 2015 |
+|    9 | 2016 |
+|    5 | 2015 |
+|   10 | 2015 |
+|    7 | 2017 |
+|    9 | 2015 |
+|    9 | 2015 |
+|    6 | 2016 |
+|    9 | 2016 |
+|    9 | 2017 |
+|    5 | 2017 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    9 | 2015 |
+|    9 | 2016 |
+|    8 | 2017 |
+|    5 | 2015 |
+|    8 | 2017 |
+|    7 | 2017 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    8 | 2016 |
+|    5 | 2016 |
+|   10 | 2015 |
+|    8 | 2017 |
+|    9 | 2016 |
+|    6 | 2015 |
+|    8 | 2017 |
+|    5 | 2015 |
+|   10 | 2016 |
+|    6 | 2017 |
+|    7 | 2015 |
+|    5 | 2016 |
+|    9 | 2016 |
++------+------+
+100 rows in set (0.00 sec)
+
+mysql> SELECT Studies.mark, Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5 GROUP BY year;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.Studies.mark' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT Studies.mark, Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5 GROUP BY Studies.year;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.Studies.mark' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT Studies.mark, Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5;
++------+------+
+| mark | year |
++------+------+
+|    5 | 2016 |
+|    9 | 2016 |
+|   10 | 2017 |
+|    7 | 2015 |
+|   10 | 2016 |
+|    6 | 2015 |
+|    6 | 2017 |
+|    6 | 2015 |
+|    6 | 2016 |
+|    5 | 2016 |
+|    7 | 2017 |
+|    6 | 2017 |
+|    7 | 2017 |
+|    8 | 2015 |
+|    6 | 2017 |
+|    6 | 2016 |
+|    6 | 2016 |
+|    7 | 2016 |
+|    9 | 2015 |
+|    7 | 2017 |
+|    9 | 2017 |
+|   10 | 2016 |
+|    5 | 2017 |
+|   10 | 2016 |
+|    6 | 2016 |
+|    6 | 2015 |
+|    6 | 2015 |
+|    5 | 2015 |
+|    7 | 2015 |
+|    9 | 2015 |
+|    8 | 2016 |
+|    5 | 2017 |
+|   10 | 2016 |
+|    6 | 2015 |
+|    6 | 2015 |
+|   10 | 2017 |
+|    9 | 2015 |
+|    7 | 2015 |
+|    6 | 2017 |
+|    6 | 2015 |
+|    6 | 2016 |
+|    7 | 2017 |
+|    5 | 2016 |
+|    6 | 2017 |
+|    7 | 2017 |
+|    7 | 2015 |
+|    9 | 2015 |
+|    9 | 2015 |
+|   10 | 2017 |
+|    9 | 2016 |
+|    9 | 2017 |
+|    8 | 2016 |
+|    7 | 2017 |
+|    6 | 2017 |
+|    9 | 2017 |
+|    5 | 2016 |
+|   10 | 2016 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    6 | 2015 |
+|   10 | 2016 |
+|   10 | 2016 |
+|    8 | 2015 |
+|    6 | 2015 |
+|    7 | 2015 |
+|    9 | 2017 |
+|   10 | 2015 |
+|    9 | 2016 |
+|    5 | 2015 |
+|   10 | 2015 |
+|    7 | 2017 |
+|    9 | 2015 |
+|    9 | 2015 |
+|    6 | 2016 |
+|    9 | 2016 |
+|    9 | 2017 |
+|    5 | 2017 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    9 | 2015 |
+|    9 | 2016 |
+|    8 | 2017 |
+|    5 | 2015 |
+|    8 | 2017 |
+|    7 | 2017 |
+|    7 | 2015 |
+|    9 | 2016 |
+|    8 | 2016 |
+|    5 | 2016 |
+|   10 | 2015 |
+|    8 | 2017 |
+|    9 | 2016 |
+|    6 | 2015 |
+|    8 | 2017 |
+|    5 | 2015 |
+|   10 | 2016 |
+|    6 | 2017 |
+|    7 | 2015 |
+|    5 | 2016 |
+|    9 | 2016 |
++------+------+
+100 rows in set (0.00 sec)
+
+mysql> SELECT AVG(Studies.mark), Studies.year FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5 GROUP BY Studies.year;
++-------------------+------+
+| AVG(Studies.mark) | year |
++-------------------+------+
+|              7.25 | 2015 |
+| 7.852941176470588 | 2016 |
+| 7.333333333333333 | 2017 |
++-------------------+------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Studies.year, AVG(Studies.mark) AS Media FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5 GROUP BY Studies.year;
++------+-------------------+
+| year | Media             |
++------+-------------------+
+| 2015 |              7.25 |
+| 2016 | 7.852941176470588 |
+| 2017 | 7.333333333333333 |
++------+-------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Studies.year, AVG(Studies.mark) AS Media_mat_aprovados FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="cs" AND Studies.mark>=5 GROUP BY Studies.year;
++------+---------------------+
+| year | Media_mat_aprovados |
++------+---------------------+
+| 2015 |                7.25 |
+| 2016 |   7.852941176470588 |
+| 2017 |   7.333333333333333 |
++------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Studies.year, AVG(Studies.mark) AS Media FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="mat" AND Studies.mark>=5 GROUP BY Studies.year;
++------+--------------------+
+| year | Media              |
++------+--------------------+
+| 2015 |  6.818181818181818 |
+| 2016 | 7.2727272727272725 |
+| 2017 |               7.65 |
++------+--------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Subjects.name, AVG(Studies.mark) AS Media FROM Studies JOIN Subjects ON Subjects.id=Studies.subject_id WHERE Subjects.field="mat" AND Studies.mark>=5 GROUP BY Subjects.name;
++----------------+-------------------+
+| name           | Media             |
++----------------+-------------------+
+| Algebra        |              6.75 |
+| Calculus       | 7.714285714285714 |
+| Calculus 2     | 7.571428571428571 |
+| Data mining    | 6.555555555555555 |
+| Gaulois theory |                 8 |
++----------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> exit

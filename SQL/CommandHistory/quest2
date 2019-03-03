@@ -1,0 +1,791 @@
+mysql> SELECT DISTINCT teacher_id, subject_id FROM Teaches;
++------------+------------+
+| teacher_id | subject_id |
++------------+------------+
+|          0 |         12 |
+|          1 |          9 |
+|          2 |          7 |
+|          2 |          9 |
+|          2 |         12 |
+|          2 |         13 |
+|          6 |          2 |
+|          8 |         11 |
+|         10 |         10 |
+|         12 |         10 |
+|         16 |         14 |
+|         19 |          6 |
+|         20 |          6 |
+|         23 |          0 |
+|         24 |          0 |
+|         27 |          1 |
+|         31 |          8 |
+|         36 |          0 |
+|         36 |          6 |
+|         36 |          8 |
+|         36 |          9 |
+|         36 |         11 |
+|         37 |         11 |
+|         38 |          8 |
+|         41 |          2 |
+|         41 |          4 |
+|         42 |          3 |
+|         42 |         10 |
+|         43 |          3 |
+|         43 |         13 |
+|         43 |         14 |
+|         44 |          3 |
+|         45 |          2 |
+|         45 |          4 |
+|         45 |          5 |
+|         45 |         12 |
+|         46 |          5 |
+|         46 |         13 |
++------------+------------+
+38 rows in set (0.09 sec)
+
+mysql> SELECT DISTINCT teacher_id, COUNT(subject_id) FROM Teaches GROUP BY teacher_id;
++------------+-------------------+
+| teacher_id | COUNT(subject_id) |
++------------+-------------------+
+|          0 |                 1 |
+|          1 |                 1 |
+|          2 |                 6 |
+|          6 |                 1 |
+|          8 |                 1 |
+|         10 |                 1 |
+|         12 |                 1 |
+|         16 |                 2 |
+|         19 |                 1 |
+|         20 |                 1 |
+|         23 |                 1 |
+|         24 |                 1 |
+|         27 |                 3 |
+|         31 |                 1 |
+|         36 |                 5 |
+|         37 |                 1 |
+|         38 |                 1 |
+|         41 |                 3 |
+|         42 |                 2 |
+|         43 |                 3 |
+|         44 |                 1 |
+|         45 |                 4 |
+|         46 |                 3 |
++------------+-------------------+
+23 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT teacher_id, COUNT(subject_id) AS n_asig FROM Teaches GROUP BY teacher_id;
++------------+--------+
+| teacher_id | n_asig |
++------------+--------+
+|          0 |      1 |
+|          1 |      1 |
+|          2 |      6 |
+|          6 |      1 |
+|          8 |      1 |
+|         10 |      1 |
+|         12 |      1 |
+|         16 |      2 |
+|         19 |      1 |
+|         20 |      1 |
+|         23 |      1 |
+|         24 |      1 |
+|         27 |      3 |
+|         31 |      1 |
+|         36 |      5 |
+|         37 |      1 |
+|         38 |      1 |
+|         41 |      3 |
+|         42 |      2 |
+|         43 |      3 |
+|         44 |      1 |
+|         45 |      4 |
+|         46 |      3 |
++------------+--------+
+23 rows in set (0.00 sec)
+
+mysql> SELECT People.name, s.n_asig FROM (SELECT DISTINCT teacher_id, COUNT(subject_id) AS n_asig FROM Teaches GROUP BY teacher_id) AS s JOIN People ON People.id=s.teacher_id;
++-----------------------+--------+
+| name                  | n_asig |
++-----------------------+--------+
+| George Boole          |      1 |
+| Galileo Galilei       |      1 |
+| Alan Turing           |      6 |
+| Ada Lovelace          |      1 |
+| Archimedes            |      1 |
+| Charles Babbage       |      1 |
+| John von Neumann      |      1 |
+| Al-Khwarizmi          |      2 |
+| David Hilbert         |      1 |
+| Pierre-Simon Laplace  |      1 |
+| Bernhard Riemann      |      1 |
+| Daniel Bernoulli      |      1 |
+| Evariste Galois       |      3 |
+| Sophie Germain        |      1 |
+| Carl Friederich Gauss |      5 |
+| Andre Marie Ampere    |      1 |
+| Gottfried Leibniz     |      1 |
+| Grace Hopper          |      3 |
+| Margaret Hamilton     |      2 |
+| Linux Torvalds        |      3 |
+| Richard Stallman      |      1 |
+| Dennis Ritchie        |      4 |
+| Tim Berners-Lee       |      3 |
++-----------------------+--------+
+23 rows in set (0.01 sec)
+
+mysql> (SELECT DISTINCT teacher_id, subject_id FROM Teaches);
++------------+------------+
+| teacher_id | subject_id |
++------------+------------+
+|          0 |         12 |
+|          1 |          9 |
+|          2 |          7 |
+|          2 |          9 |
+|          2 |         12 |
+|          2 |         13 |
+|          6 |          2 |
+|          8 |         11 |
+|         10 |         10 |
+|         12 |         10 |
+|         16 |         14 |
+|         19 |          6 |
+|         20 |          6 |
+|         23 |          0 |
+|         24 |          0 |
+|         27 |          1 |
+|         31 |          8 |
+|         36 |          0 |
+|         36 |          6 |
+|         36 |          8 |
+|         36 |          9 |
+|         36 |         11 |
+|         37 |         11 |
+|         38 |          8 |
+|         41 |          2 |
+|         41 |          4 |
+|         42 |          3 |
+|         42 |         10 |
+|         43 |          3 |
+|         43 |         13 |
+|         43 |         14 |
+|         44 |          3 |
+|         45 |          2 |
+|         45 |          4 |
+|         45 |          5 |
+|         45 |         12 |
+|         46 |          5 |
+|         46 |         13 |
++------------+------------+
+38 rows in set (0.00 sec)
+
+mysql> SELECT teacher_id, COUNT(subject_id) FROM (SELECT DISTINCT teacher_id, subject_id FROM Teaches) AS dist GROUP BY teacher_id;
++------------+-------------------+
+| teacher_id | COUNT(subject_id) |
++------------+-------------------+
+|          0 |                 1 |
+|          1 |                 1 |
+|          2 |                 4 |
+|          6 |                 1 |
+|          8 |                 1 |
+|         10 |                 1 |
+|         12 |                 1 |
+|         16 |                 1 |
+|         19 |                 1 |
+|         20 |                 1 |
+|         23 |                 1 |
+|         24 |                 1 |
+|         27 |                 1 |
+|         31 |                 1 |
+|         36 |                 5 |
+|         37 |                 1 |
+|         38 |                 1 |
+|         41 |                 2 |
+|         42 |                 2 |
+|         43 |                 3 |
+|         44 |                 1 |
+|         45 |                 4 |
+|         46 |                 2 |
++------------+-------------------+
+23 rows in set (0.00 sec)
+
+mysql> SELECT People.name, final.n_asig FROM (SELECT teacher_id, COUNT(subject_id) AS n_asig FROM (SELECT DISTINCT teacher_id, subject_id FROM Teaches) AS dist GROUP BY teacher_id) AS final JOIN People ON final.teacher_id=People.id;
++-----------------------+--------+
+| name                  | n_asig |
++-----------------------+--------+
+| George Boole          |      1 |
+| Galileo Galilei       |      1 |
+| Alan Turing           |      4 |
+| Ada Lovelace          |      1 |
+| Archimedes            |      1 |
+| Charles Babbage       |      1 |
+| John von Neumann      |      1 |
+| Al-Khwarizmi          |      1 |
+| David Hilbert         |      1 |
+| Pierre-Simon Laplace  |      1 |
+| Bernhard Riemann      |      1 |
+| Daniel Bernoulli      |      1 |
+| Evariste Galois       |      1 |
+| Sophie Germain        |      1 |
+| Carl Friederich Gauss |      5 |
+| Andre Marie Ampere    |      1 |
+| Gottfried Leibniz     |      1 |
+| Grace Hopper          |      2 |
+| Margaret Hamilton     |      2 |
+| Linux Torvalds        |      3 |
+| Richard Stallman      |      1 |
+| Dennis Ritchie        |      4 |
+| Tim Berners-Lee       |      2 |
++-----------------------+--------+
+23 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Studies;
++------------+------------+------+------+
+| student_id | subject_id | year | mark |
++------------+------------+------+------+
+|          0 |          2 | 2015 |    3 |
+|          0 |          2 | 2016 |    5 |
+|          0 |          4 | 2016 |    9 |
+|          0 |         11 | 2016 |   10 |
+|          0 |         14 | 2017 |   10 |
+|          1 |          6 | 2017 |    4 |
+|          1 |          9 | 2015 |    4 |
+|          1 |         10 | 2015 |    7 |
+|          1 |         10 | 2016 |   10 |
+|          1 |         12 | 2015 |    6 |
+|          1 |         13 | 2015 |    4 |
+|          2 |          2 | 2017 |    6 |
+|          2 |          5 | 2015 |    6 |
+|          2 |          5 | 2016 |    6 |
+|          2 |          7 | 2016 |    5 |
+|          2 |         10 | 2017 |    7 |
+|          2 |         13 | 2017 |    5 |
+|          3 |          5 | 2017 |    6 |
+|          3 |          7 | 2017 |    7 |
+|          3 |          8 | 2017 |    9 |
+|          3 |          9 | 2016 |    8 |
+|          3 |         11 | 2015 |    8 |
+|          4 |          1 | 2017 |    3 |
+|          4 |          2 | 2017 |    3 |
+|          4 |          8 | 2016 |   10 |
+|          5 |          8 | 2015 |    5 |
+|          6 |          2 | 2015 |    8 |
+|          6 |          4 | 2015 |    3 |
+|          6 |          7 | 2015 |    3 |
+|          6 |         11 | 2017 |   10 |
+|          6 |         14 | 2017 |    6 |
+|          7 |          1 | 2015 |    3 |
+|          7 |          3 | 2017 |    3 |
+|          7 |         10 | 2016 |    6 |
+|          7 |         11 | 2016 |    6 |
+|          7 |         12 | 2016 |    6 |
+|          7 |         13 | 2015 |    4 |
+|          8 |          1 | 2015 |    6 |
+|          8 |          2 | 2015 |    4 |
+|          8 |          3 | 2016 |    7 |
+|          8 |          4 | 2015 |    9 |
+|          8 |          6 | 2016 |    7 |
+|          8 |          7 | 2017 |    7 |
+|          8 |          8 | 2015 |    7 |
+|          8 |          9 | 2015 |    5 |
+|          9 |          3 | 2017 |    9 |
+|          9 |          6 | 2016 |    6 |
+|          9 |          7 | 2016 |   10 |
+|          9 |         13 | 2017 |    9 |
+|         10 |          0 | 2016 |    7 |
+|         10 |          1 | 2017 |    7 |
+|         10 |          3 | 2017 |    5 |
+|         10 |          7 | 2016 |   10 |
+|         10 |         10 | 2016 |    6 |
+|         11 |          2 | 2015 |    6 |
+|         11 |          5 | 2015 |    6 |
+|         11 |          8 | 2015 |    3 |
+|         11 |         10 | 2015 |    5 |
+|         12 |          4 | 2015 |    7 |
+|         12 |          5 | 2015 |    9 |
+|         12 |          7 | 2016 |    8 |
+|         12 |         10 | 2015 |    3 |
+|         12 |         11 | 2016 |    5 |
+|         12 |         13 | 2015 |    8 |
+|         12 |         14 | 2017 |    5 |
+|         13 |          3 | 2016 |    3 |
+|         13 |         13 | 2015 |    3 |
+|         13 |         14 | 2016 |   10 |
+|         14 |          1 | 2017 |    7 |
+|         14 |          3 | 2015 |    6 |
+|         15 |          0 | 2017 |    5 |
+|         15 |          5 | 2015 |    6 |
+|         15 |          8 | 2016 |    7 |
+|         15 |         10 | 2017 |   10 |
+|         15 |         11 | 2015 |    9 |
+|         15 |         12 | 2015 |    9 |
+|         16 |          1 | 2016 |   10 |
+|         16 |          7 | 2015 |    7 |
+|         16 |          9 | 2016 |    4 |
+|         17 |          1 | 2015 |    4 |
+|         17 |          2 | 2016 |    3 |
+|         17 |          3 | 2016 |    4 |
+|         17 |          3 | 2017 |    6 |
+|         17 |          4 | 2015 |    6 |
+|         17 |          4 | 2016 |    6 |
+|         17 |          6 | 2016 |   10 |
+|         17 |          7 | 2017 |    7 |
+|         17 |          9 | 2016 |    6 |
+|         17 |         11 | 2017 |    8 |
+|         17 |         14 | 2017 |    4 |
+|         18 |          0 | 2016 |    4 |
+|         18 |          3 | 2016 |    5 |
+|         18 |          4 | 2017 |    6 |
+|         18 |          5 | 2017 |    7 |
+|         18 |          6 | 2017 |    7 |
+|         18 |          7 | 2016 |    4 |
+|         19 |          4 | 2015 |    7 |
+|         19 |          6 | 2015 |    6 |
+|         19 |          8 | 2016 |    9 |
+|         19 |          8 | 2017 |   10 |
+|         19 |         10 | 2015 |    4 |
+|         19 |         14 | 2015 |    9 |
+|         20 |          0 | 2017 |    3 |
+|         20 |          1 | 2016 |    9 |
+|         20 |          2 | 2015 |    9 |
+|         20 |          4 | 2017 |   10 |
+|         20 |          5 | 2016 |    9 |
+|         20 |         10 | 2017 |    9 |
+|         20 |         12 | 2015 |    4 |
+|         20 |         13 | 2017 |   10 |
+|         20 |         14 | 2016 |    8 |
+|         21 |          3 | 2017 |    7 |
+|         21 |          6 | 2015 |    3 |
+|         21 |          7 | 2017 |    6 |
+|         21 |          8 | 2017 |    6 |
+|         21 |         12 | 2017 |    9 |
+|         21 |         14 | 2016 |    5 |
+|         22 |          5 | 2016 |   10 |
+|         22 |         11 | 2016 |    3 |
+|         22 |         13 | 2015 |    6 |
+|         22 |         13 | 2016 |   10 |
+|         23 |          0 | 2015 |    9 |
+|         23 |          0 | 2016 |    3 |
+|         23 |          0 | 2017 |    4 |
+|         23 |          1 | 2017 |    8 |
+|         23 |          2 | 2016 |    4 |
+|         24 |          1 | 2015 |    4 |
+|         24 |          1 | 2016 |    5 |
+|         24 |          2 | 2015 |    7 |
+|         24 |          2 | 2016 |    9 |
+|         24 |          4 | 2017 |    4 |
+|         25 |          2 | 2015 |    6 |
+|         25 |          4 | 2016 |   10 |
+|         25 |          7 | 2015 |    4 |
+|         25 |         11 | 2015 |    7 |
+|         26 |          0 | 2017 |    8 |
+|         26 |          6 | 2015 |    4 |
+|         26 |          7 | 2015 |    4 |
+|         26 |          7 | 2016 |    4 |
+|         26 |          9 | 2016 |    3 |
+|         26 |         10 | 2015 |    3 |
+|         26 |         12 | 2016 |   10 |
+|         27 |          1 | 2017 |    7 |
+|         27 |          3 | 2015 |    8 |
+|         27 |          4 | 2015 |    6 |
+|         27 |          7 | 2015 |    7 |
+|         27 |          8 | 2015 |    3 |
+|         27 |          8 | 2017 |    6 |
+|         27 |          9 | 2017 |    3 |
+|         28 |          0 | 2017 |   10 |
+|         28 |          2 | 2016 |    3 |
+|         28 |          6 | 2016 |    5 |
+|         28 |          8 | 2015 |    4 |
+|         28 |          8 | 2017 |   10 |
+|         28 |         10 | 2017 |    9 |
+|         28 |         14 | 2015 |   10 |
+|         28 |         14 | 2016 |    4 |
+|         29 |          4 | 2016 |    9 |
+|         29 |          4 | 2017 |    3 |
+|         29 |          6 | 2016 |    5 |
+|         29 |         10 | 2015 |    5 |
+|         29 |         12 | 2015 |   10 |
+|         29 |         12 | 2017 |    7 |
+|         29 |         13 | 2016 |    9 |
+|         29 |         14 | 2015 |    9 |
+|         30 |          0 | 2015 |    4 |
+|         30 |          5 | 2015 |    9 |
+|         30 |          7 | 2016 |    6 |
+|         31 |          1 | 2017 |    9 |
+|         31 |          3 | 2016 |    9 |
+|         31 |         11 | 2016 |    7 |
+|         32 |          3 | 2017 |    9 |
+|         32 |          4 | 2016 |    4 |
+|         32 |          9 | 2016 |    5 |
+|         32 |         10 | 2017 |    5 |
+|         32 |         12 | 2015 |    7 |
+|         33 |          3 | 2016 |    9 |
+|         33 |          5 | 2015 |    9 |
+|         33 |          8 | 2016 |    5 |
+|         33 |          9 | 2015 |    4 |
+|         33 |          9 | 2016 |    7 |
+|         33 |         14 | 2016 |    9 |
+|         34 |          1 | 2015 |   10 |
+|         34 |          1 | 2016 |    3 |
+|         34 |          2 | 2015 |    3 |
+|         34 |          3 | 2017 |    8 |
+|         34 |          5 | 2015 |    5 |
+|         34 |          5 | 2016 |    3 |
+|         35 |          3 | 2017 |    8 |
+|         35 |          9 | 2016 |    6 |
+|         36 |          2 | 2017 |    7 |
+|         37 |          0 | 2017 |    7 |
+|         37 |          4 | 2016 |    4 |
+|         37 |          6 | 2016 |    9 |
+|         38 |          3 | 2015 |    7 |
+|         38 |          7 | 2016 |    9 |
+|         38 |          9 | 2015 |    8 |
+|         38 |         10 | 2016 |    8 |
+|         38 |         13 | 2017 |    8 |
+|         38 |         14 | 2016 |    5 |
+|         39 |          1 | 2015 |    3 |
+|         39 |          1 | 2016 |    3 |
+|         39 |          2 | 2015 |    4 |
+|         39 |          3 | 2017 |    4 |
+|         39 |         14 | 2015 |   10 |
+|         40 |          7 | 2015 |    4 |
+|         40 |         11 | 2017 |   10 |
+|         40 |         13 | 2017 |    8 |
+|         41 |          2 | 2017 |    8 |
+|         41 |          3 | 2016 |    9 |
+|         41 |          6 | 2016 |    6 |
+|         41 |          8 | 2017 |    8 |
+|         41 |          9 | 2017 |    9 |
+|         41 |         13 | 2015 |    8 |
+|         41 |         13 | 2017 |    5 |
+|         42 |          0 | 2016 |    8 |
+|         42 |          1 | 2016 |   10 |
+|         42 |          2 | 2015 |    6 |
+|         42 |          2 | 2016 |    4 |
+|         42 |          3 | 2017 |    8 |
+|         42 |          6 | 2015 |    8 |
+|         42 |         10 | 2016 |    4 |
+|         42 |         11 | 2017 |    3 |
+|         43 |          4 | 2015 |    5 |
+|         43 |          9 | 2017 |    3 |
+|         44 |          5 | 2016 |   10 |
+|         44 |          6 | 2017 |    7 |
+|         45 |          2 | 2017 |    6 |
+|         45 |          3 | 2015 |    7 |
+|         45 |          5 | 2015 |    4 |
+|         45 |          7 | 2016 |    5 |
+|         45 |          8 | 2015 |    6 |
+|         45 |         12 | 2016 |    9 |
+|         46 |          6 | 2015 |    5 |
+|         46 |          8 | 2017 |    8 |
+|         46 |          9 | 2017 |    5 |
+|         46 |         14 | 2017 |    3 |
++------------+------------+------+------+
+237 rows in set (0.00 sec)
+
+mysql> SELECT subject_id, COUNT(student_id) FROM Studies GROUP BY subject_id;
++------------+-------------------+
+| subject_id | COUNT(student_id) |
++------------+-------------------+
+|          0 |                12 |
+|          1 |                18 |
+|          2 |                21 |
+|          3 |                21 |
+|          4 |                17 |
+|          5 |                15 |
+|          6 |                15 |
+|          7 |                19 |
+|          8 |                17 |
+|          9 |                15 |
+|         10 |                16 |
+|         11 |                12 |
+|         12 |                10 |
+|         13 |                14 |
+|         14 |                15 |
++------------+-------------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT subject_id, MAX(COUNT(student_id)) FROM Studies GROUP BY subject_id;
+ERROR 1111 (HY000): Invalid use of group function
+mysql> SELECT subject_id, MAX(counted) FROM (SELECT subject_id, COUNT(student_id) AS counted FROM Studies GROUP BY subject_id);
+ERROR 1248 (42000): Every derived table must have its own alias
+mysql> SELECT subject_id, MAX(counted) FROM (SELECT subject_id, COUNT(student_id) AS counted FROM Studies GROUP BY subject_id) AS s;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 's.subject_id'; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT s.subject_id, MAX(s.counted) FROM (SELECT subject_id, COUNT(student_id) AS counted FROM Studies GROUP BY subject_id) AS s;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 's.subject_id'; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT subject_id, COUNT(student_id) FROM Studies GROUP BY subject_id ORDER;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> SELECT subject_id, COUNT(student_id) FROM Studies GROUP BY subject_id ORDER BY;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> SELECT subject_id, COUNT(student_id) as c FROM Studies GROUP BY subject_id ORDER BY c;
++------------+----+
+| subject_id | c  |
++------------+----+
+|         12 | 10 |
+|          0 | 12 |
+|         11 | 12 |
+|         13 | 14 |
+|         14 | 15 |
+|          6 | 15 |
+|          9 | 15 |
+|          5 | 15 |
+|         10 | 16 |
+|          4 | 17 |
+|          8 | 17 |
+|          1 | 18 |
+|          7 | 19 |
+|          2 | 21 |
+|          3 | 21 |
++------------+----+
+15 rows in set (0.01 sec)
+
+mysql> SELECT subject_id, COUNT(student_id) as c FROM Studies GROUP BY subject_id ORDER BY c DESC;
++------------+----+
+| subject_id | c  |
++------------+----+
+|          2 | 21 |
+|          3 | 21 |
+|          7 | 19 |
+|          1 | 18 |
+|          4 | 17 |
+|          8 | 17 |
+|         10 | 16 |
+|         14 | 15 |
+|          6 | 15 |
+|          9 | 15 |
+|          5 | 15 |
+|         13 | 14 |
+|          0 | 12 |
+|         11 | 12 |
+|         12 | 10 |
++------------+----+
+15 rows in set (0.00 sec)
+
+mysql> SELECT subject_id, COUNT(student_id) as c FROM Studies GROUP BY subject_id ORDER BY c DESC LIMIT 1;
++------------+----+
+| subject_id | c  |
++------------+----+
+|          2 | 21 |
++------------+----+
+1 row in set (0.00 sec)
+
+mysql> SELECT Subjects.name FROM (SELECT subject_id, COUNT(student_id) as c FROM Studies GROUP BY subject_id ORDER BY c DESC LIMIT 1) AS final JOIN Subjects ON final.subject_id=Subjects.id;
++----------------------+
+| name                 |
++----------------------+
+| Intro to programming |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Studies WHERE year=2017;
++------------+------------+------+------+
+| student_id | subject_id | year | mark |
++------------+------------+------+------+
+|          0 |         14 | 2017 |   10 |
+|          1 |          6 | 2017 |    4 |
+|          2 |          2 | 2017 |    6 |
+|          2 |         10 | 2017 |    7 |
+|          2 |         13 | 2017 |    5 |
+|          3 |          5 | 2017 |    6 |
+|          3 |          7 | 2017 |    7 |
+|          3 |          8 | 2017 |    9 |
+|          4 |          1 | 2017 |    3 |
+|          4 |          2 | 2017 |    3 |
+|          6 |         11 | 2017 |   10 |
+|          6 |         14 | 2017 |    6 |
+|          7 |          3 | 2017 |    3 |
+|          8 |          7 | 2017 |    7 |
+|          9 |          3 | 2017 |    9 |
+|          9 |         13 | 2017 |    9 |
+|         10 |          1 | 2017 |    7 |
+|         10 |          3 | 2017 |    5 |
+|         12 |         14 | 2017 |    5 |
+|         14 |          1 | 2017 |    7 |
+|         15 |          0 | 2017 |    5 |
+|         15 |         10 | 2017 |   10 |
+|         17 |          3 | 2017 |    6 |
+|         17 |          7 | 2017 |    7 |
+|         17 |         11 | 2017 |    8 |
+|         17 |         14 | 2017 |    4 |
+|         18 |          4 | 2017 |    6 |
+|         18 |          5 | 2017 |    7 |
+|         18 |          6 | 2017 |    7 |
+|         19 |          8 | 2017 |   10 |
+|         20 |          0 | 2017 |    3 |
+|         20 |          4 | 2017 |   10 |
+|         20 |         10 | 2017 |    9 |
+|         20 |         13 | 2017 |   10 |
+|         21 |          3 | 2017 |    7 |
+|         21 |          7 | 2017 |    6 |
+|         21 |          8 | 2017 |    6 |
+|         21 |         12 | 2017 |    9 |
+|         23 |          0 | 2017 |    4 |
+|         23 |          1 | 2017 |    8 |
+|         24 |          4 | 2017 |    4 |
+|         26 |          0 | 2017 |    8 |
+|         27 |          1 | 2017 |    7 |
+|         27 |          8 | 2017 |    6 |
+|         27 |          9 | 2017 |    3 |
+|         28 |          0 | 2017 |   10 |
+|         28 |          8 | 2017 |   10 |
+|         28 |         10 | 2017 |    9 |
+|         29 |          4 | 2017 |    3 |
+|         29 |         12 | 2017 |    7 |
+|         31 |          1 | 2017 |    9 |
+|         32 |          3 | 2017 |    9 |
+|         32 |         10 | 2017 |    5 |
+|         34 |          3 | 2017 |    8 |
+|         35 |          3 | 2017 |    8 |
+|         36 |          2 | 2017 |    7 |
+|         37 |          0 | 2017 |    7 |
+|         38 |         13 | 2017 |    8 |
+|         39 |          3 | 2017 |    4 |
+|         40 |         11 | 2017 |   10 |
+|         40 |         13 | 2017 |    8 |
+|         41 |          2 | 2017 |    8 |
+|         41 |          8 | 2017 |    8 |
+|         41 |          9 | 2017 |    9 |
+|         41 |         13 | 2017 |    5 |
+|         42 |          3 | 2017 |    8 |
+|         42 |         11 | 2017 |    3 |
+|         43 |          9 | 2017 |    3 |
+|         44 |          6 | 2017 |    7 |
+|         45 |          2 | 2017 |    6 |
+|         46 |          8 | 2017 |    8 |
+|         46 |          9 | 2017 |    5 |
+|         46 |         14 | 2017 |    3 |
++------------+------------+------+------+
+73 rows in set (0.00 sec)
+
+mysql> SELECT student_id, COUNT(subject_id) FROM Studies GROUP BY student_id HAVING year=2017;
+ERROR 1054 (42S22): Unknown column 'year' in 'having clause'
+mysql> SELECT student_id, COUNT(subject_id) FROM Studies GROUP BY student_id HAVING Studies.year=2017;
+ERROR 1054 (42S22): Unknown column 'Studies.year' in 'having clause'
+mysql> SELECT student_id, COUNT(subject_id) FROM Studies WHERE year=2017 GROUP BY student_id;
++------------+-------------------+
+| student_id | COUNT(subject_id) |
++------------+-------------------+
+|          0 |                 1 |
+|          1 |                 1 |
+|          2 |                 3 |
+|          3 |                 3 |
+|          4 |                 2 |
+|          6 |                 2 |
+|          7 |                 1 |
+|          8 |                 1 |
+|          9 |                 2 |
+|         10 |                 2 |
+|         12 |                 1 |
+|         14 |                 1 |
+|         15 |                 2 |
+|         17 |                 4 |
+|         18 |                 3 |
+|         19 |                 1 |
+|         20 |                 4 |
+|         21 |                 4 |
+|         23 |                 2 |
+|         24 |                 1 |
+|         26 |                 1 |
+|         27 |                 3 |
+|         28 |                 3 |
+|         29 |                 2 |
+|         31 |                 1 |
+|         32 |                 2 |
+|         34 |                 1 |
+|         35 |                 1 |
+|         36 |                 1 |
+|         37 |                 1 |
+|         38 |                 1 |
+|         39 |                 1 |
+|         40 |                 2 |
+|         41 |                 4 |
+|         42 |                 2 |
+|         43 |                 1 |
+|         44 |                 1 |
+|         45 |                 1 |
+|         46 |                 3 |
++------------+-------------------+
+39 rows in set (0.01 sec)
+
+mysql> (SELECT student_id, COUNT(subject_id) AS n, subject_id FROM Studies WHERE year=2017 GROUP BY student_id);
+ERROR 1055 (42000): Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.Studies.subject_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT student_id, subject_id FROM Studies WHERE year=2017;
++------------+------------+
+| student_id | subject_id |
++------------+------------+
+|          0 |         14 |
+|          1 |          6 |
+|          2 |          2 |
+|          2 |         10 |
+|          2 |         13 |
+|          3 |          5 |
+|          3 |          7 |
+|          3 |          8 |
+|          4 |          1 |
+|          4 |          2 |
+|          6 |         11 |
+|          6 |         14 |
+|          7 |          3 |
+|          8 |          7 |
+|          9 |          3 |
+|          9 |         13 |
+|         10 |          1 |
+|         10 |          3 |
+|         12 |         14 |
+|         14 |          1 |
+|         15 |          0 |
+|         15 |         10 |
+|         17 |          3 |
+|         17 |          7 |
+|         17 |         11 |
+|         17 |         14 |
+|         18 |          4 |
+|         18 |          5 |
+|         18 |          6 |
+|         19 |          8 |
+|         20 |          0 |
+|         20 |          4 |
+|         20 |         10 |
+|         20 |         13 |
+|         21 |          3 |
+|         21 |          7 |
+|         21 |          8 |
+|         21 |         12 |
+|         23 |          0 |
+|         23 |          1 |
+|         24 |          4 |
+|         26 |          0 |
+|         27 |          1 |
+|         27 |          8 |
+|         27 |          9 |
+|         28 |          0 |
+|         28 |          8 |
+|         28 |         10 |
+|         29 |          4 |
+|         29 |         12 |
+|         31 |          1 |
+|         32 |          3 |
+|         32 |         10 |
+|         34 |          3 |
+|         35 |          3 |
+|         36 |          2 |
+|         37 |          0 |
+|         38 |         13 |
+|         39 |          3 |
+|         40 |         11 |
+|         40 |         13 |
+|         41 |          2 |
+|         41 |          8 |
+|         41 |          9 |
+|         41 |         13 |
+|         42 |          3 |
+|         42 |         11 |
+|         43 |          9 |
+|         44 |          6 |
+|         45 |          2 |
+|         46 |          8 |
+|         46 |          9 |
+|         46 |         14 |
++------------+------------+
+73 rows in set (0.00 sec)
+
+mysql> exit

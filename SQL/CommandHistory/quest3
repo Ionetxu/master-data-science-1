@@ -1,0 +1,401 @@
+mysql> SELECT student_id, subject_id FROM Studies WHERE year=2017;
+ERROR 1046 (3D000): No database selected
+mysql> USE university
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SELECT student_id, subject_id FROM Studies WHERE year=2017;
++------------+------------+
+| student_id | subject_id |
++------------+------------+
+|          0 |         14 |
+|          1 |          6 |
+|          2 |          2 |
+|          2 |         10 |
+|          2 |         13 |
+|          3 |          5 |
+|          3 |          7 |
+|          3 |          8 |
+|          4 |          1 |
+|          4 |          2 |
+|          6 |         11 |
+|          6 |         14 |
+|          7 |          3 |
+|          8 |          7 |
+|          9 |          3 |
+|          9 |         13 |
+|         10 |          1 |
+|         10 |          3 |
+|         12 |         14 |
+|         14 |          1 |
+|         15 |          0 |
+|         15 |         10 |
+|         17 |          3 |
+|         17 |          7 |
+|         17 |         11 |
+|         17 |         14 |
+|         18 |          4 |
+|         18 |          5 |
+|         18 |          6 |
+|         19 |          8 |
+|         20 |          0 |
+|         20 |          4 |
+|         20 |         10 |
+|         20 |         13 |
+|         21 |          3 |
+|         21 |          7 |
+|         21 |          8 |
+|         21 |         12 |
+|         23 |          0 |
+|         23 |          1 |
+|         24 |          4 |
+|         26 |          0 |
+|         27 |          1 |
+|         27 |          8 |
+|         27 |          9 |
+|         28 |          0 |
+|         28 |          8 |
+|         28 |         10 |
+|         29 |          4 |
+|         29 |         12 |
+|         31 |          1 |
+|         32 |          3 |
+|         32 |         10 |
+|         34 |          3 |
+|         35 |          3 |
+|         36 |          2 |
+|         37 |          0 |
+|         38 |         13 |
+|         39 |          3 |
+|         40 |         11 |
+|         40 |         13 |
+|         41 |          2 |
+|         41 |          8 |
+|         41 |          9 |
+|         41 |         13 |
+|         42 |          3 |
+|         42 |         11 |
+|         43 |          9 |
+|         44 |          6 |
+|         45 |          2 |
+|         46 |          8 |
+|         46 |          9 |
+|         46 |         14 |
++------------+------------+
+73 rows in set (0.00 sec)
+
+mysql> SELECT * FROM (SELECT student_id, subject_id FROM Studies WHERE year=2017) AS s JOIN Subjects ON s.subject_id=Subjects.id;
++------------+------------+----+-------------------------+---------+-------+
+| student_id | subject_id | id | name                    | credits | field |
++------------+------------+----+-------------------------+---------+-------+
+|          0 |         14 | 14 | Algorithms              |      15 | cs    |
+|          1 |          6 |  6 | Algebra                 |      15 | mat   |
+|          2 |          2 |  2 | Intro to programming    |      20 | cs    |
+|          2 |         10 | 10 | Hardware                |      10 | cs    |
+|          2 |         13 | 13 | Applications            |       5 | all   |
+|          3 |          5 |  5 | Computer networks       |      10 | cs    |
+|          3 |          7 |  7 | Artificial Intelligence |      20 | cs    |
+|          3 |          8 |  8 | Calculus 2              |      10 | mat   |
+|          4 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|          4 |          2 |  2 | Intro to programming    |      20 | cs    |
+|          6 |         11 | 11 | Physics                 |      10 | ph    |
+|          6 |         14 | 14 | Algorithms              |      15 | cs    |
+|          7 |          3 |  3 | Advanced programming    |      20 | cs    |
+|          8 |          7 |  7 | Artificial Intelligence |      20 | cs    |
+|          9 |          3 |  3 | Advanced programming    |      20 | cs    |
+|          9 |         13 | 13 | Applications            |       5 | all   |
+|         10 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|         10 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         12 |         14 | 14 | Algorithms              |      15 | cs    |
+|         14 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|         15 |          0 |  0 | Calculus                |      10 | mat   |
+|         15 |         10 | 10 | Hardware                |      10 | cs    |
+|         17 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         17 |          7 |  7 | Artificial Intelligence |      20 | cs    |
+|         17 |         11 | 11 | Physics                 |      10 | ph    |
+|         17 |         14 | 14 | Algorithms              |      15 | cs    |
+|         18 |          4 |  4 | Compilers               |      15 | cs    |
+|         18 |          5 |  5 | Computer networks       |      10 | cs    |
+|         18 |          6 |  6 | Algebra                 |      15 | mat   |
+|         19 |          8 |  8 | Calculus 2              |      10 | mat   |
+|         20 |          0 |  0 | Calculus                |      10 | mat   |
+|         20 |          4 |  4 | Compilers               |      15 | cs    |
+|         20 |         10 | 10 | Hardware                |      10 | cs    |
+|         20 |         13 | 13 | Applications            |       5 | all   |
+|         21 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         21 |          7 |  7 | Artificial Intelligence |      20 | cs    |
+|         21 |          8 |  8 | Calculus 2              |      10 | mat   |
+|         21 |         12 | 12 | Computer science        |      10 | cs    |
+|         23 |          0 |  0 | Calculus                |      10 | mat   |
+|         23 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|         24 |          4 |  4 | Compilers               |      15 | cs    |
+|         26 |          0 |  0 | Calculus                |      10 | mat   |
+|         27 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|         27 |          8 |  8 | Calculus 2              |      10 | mat   |
+|         27 |          9 |  9 | Data mining             |      15 | mat   |
+|         28 |          0 |  0 | Calculus                |      10 | mat   |
+|         28 |          8 |  8 | Calculus 2              |      10 | mat   |
+|         28 |         10 | 10 | Hardware                |      10 | cs    |
+|         29 |          4 |  4 | Compilers               |      15 | cs    |
+|         29 |         12 | 12 | Computer science        |      10 | cs    |
+|         31 |          1 |  1 | Gaulois theory          |       5 | mat   |
+|         32 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         32 |         10 | 10 | Hardware                |      10 | cs    |
+|         34 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         35 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         36 |          2 |  2 | Intro to programming    |      20 | cs    |
+|         37 |          0 |  0 | Calculus                |      10 | mat   |
+|         38 |         13 | 13 | Applications            |       5 | all   |
+|         39 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         40 |         11 | 11 | Physics                 |      10 | ph    |
+|         40 |         13 | 13 | Applications            |       5 | all   |
+|         41 |          2 |  2 | Intro to programming    |      20 | cs    |
+|         41 |          8 |  8 | Calculus 2              |      10 | mat   |
+|         41 |          9 |  9 | Data mining             |      15 | mat   |
+|         41 |         13 | 13 | Applications            |       5 | all   |
+|         42 |          3 |  3 | Advanced programming    |      20 | cs    |
+|         42 |         11 | 11 | Physics                 |      10 | ph    |
+|         43 |          9 |  9 | Data mining             |      15 | mat   |
+|         44 |          6 |  6 | Algebra                 |      15 | mat   |
+|         45 |          2 |  2 | Intro to programming    |      20 | cs    |
+|         46 |          8 |  8 | Calculus 2              |      10 | mat   |
+|         46 |          9 |  9 | Data mining             |      15 | mat   |
+|         46 |         14 | 14 | Algorithms              |      15 | cs    |
++------------+------------+----+-------------------------+---------+-------+
+73 rows in set (0.00 sec)
+
+mysql> SELECT s.student_id, SUM(Subjects.credits) AS creds FROM (SELECT student_id, subject_id FROM Studies WHERE year=2017) AS s JOIN Subjects ON s.subject_id=Subjects.id GROUP BY s.subject_id;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 's.student_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT s.student_id, SUM(Subjects.credits) AS creds FROM (SELECT student_id, subject_id FROM Studies WHERE year=2017) AS s JOIN Subjects ON s.subject_id=Subjects.id GROUP BY s.student_id;
++------------+-------+
+| student_id | creds |
++------------+-------+
+|          0 |    15 |
+|          1 |    15 |
+|          2 |    35 |
+|          3 |    40 |
+|          4 |    25 |
+|          6 |    25 |
+|          7 |    20 |
+|          8 |    20 |
+|          9 |    25 |
+|         10 |    25 |
+|         12 |    15 |
+|         14 |     5 |
+|         15 |    20 |
+|         17 |    65 |
+|         18 |    40 |
+|         19 |    10 |
+|         20 |    40 |
+|         21 |    60 |
+|         23 |    15 |
+|         24 |    15 |
+|         26 |    10 |
+|         27 |    30 |
+|         28 |    30 |
+|         29 |    25 |
+|         31 |     5 |
+|         32 |    30 |
+|         34 |    20 |
+|         35 |    20 |
+|         36 |    20 |
+|         37 |    10 |
+|         38 |     5 |
+|         39 |    20 |
+|         40 |    15 |
+|         41 |    50 |
+|         42 |    30 |
+|         43 |    15 |
+|         44 |    15 |
+|         45 |    20 |
+|         46 |    40 |
++------------+-------+
+39 rows in set (0.10 sec)
+
+mysql> SELECT s.student_id, SUM(Subjects.credits) AS creds FROM (SELECT student_id, subject_id FROM Studies WHERE year=2017) AS s JOIN Subjects ON s.subject_id=Subjects.id GROUP BY s.student_id ORDER BY creds DESC LIMIT 1;
++------------+-------+
+| student_id | creds |
++------------+-------+
+|         17 |    65 |
++------------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT People.name FROM (SELECT s.student_id, SUM(Subjects.credits) AS creds FROM (SELECT student_id, subject_id FROM Studies WHERE year=2017) AS s JOIN Subjects ON s.subject_id=Subjects.id GROUP BY s.student_id ORDER BY creds DESC LIMIT 1) AS final JOIN People ON final.student_id=People.id;
++--------------------+
+| name               |
++--------------------+
+| Christiaan Huygens |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Teaches JOIN People ON Teaches.teacher_id=People.id;
++------------+------------+------+----+-----------------------+--------+-------------+------+
+| teacher_id | subject_id | year | id | name                  | gender | nationality | age  |
++------------+------------+------+----+-----------------------+--------+-------------+------+
+|          0 |         12 | 2015 |  0 | George Boole          | M      | British     |   25 |
+|          1 |          9 | 2016 |  1 | Galileo Galilei       | M      | Italian     |   45 |
+|          2 |          7 | 2015 |  2 | Alan Turing           | M      | British     |   43 |
+|          2 |          7 | 2016 |  2 | Alan Turing           | M      | British     |   43 |
+|          2 |          7 | 2017 |  2 | Alan Turing           | M      | British     |   43 |
+|          2 |          9 | 2017 |  2 | Alan Turing           | M      | British     |   43 |
+|          2 |         12 | 2016 |  2 | Alan Turing           | M      | British     |   43 |
+|          2 |         13 | 2017 |  2 | Alan Turing           | M      | British     |   43 |
+|          6 |          2 | 2015 |  6 | Ada Lovelace          | F      | British     |   23 |
+|          8 |         11 | 2015 |  8 | Archimedes            | M      | Greek       |   34 |
+|         10 |         10 | 2015 | 10 | Charles Babbage       | M      | British     |   34 |
+|         12 |         10 | 2016 | 12 | John von Neumann      | M      | Hungarian   |   24 |
+|         16 |         14 | 2015 | 16 | Al-Khwarizmi          | M      | Persian     |   19 |
+|         16 |         14 | 2016 | 16 | Al-Khwarizmi          | M      | Persian     |   19 |
+|         19 |          6 | 2015 | 19 | David Hilbert         | M      | German      |   19 |
+|         20 |          6 | 2016 | 20 | Pierre-Simon Laplace  | M      | French      |   19 |
+|         23 |          0 | 2016 | 23 | Bernhard Riemann      | M      | German      |   19 |
+|         24 |          0 | 2015 | 24 | Daniel Bernoulli      | M      | Swiss       |   23 |
+|         27 |          1 | 2015 | 27 | Evariste Galois       | M      | French      |   19 |
+|         27 |          1 | 2016 | 27 | Evariste Galois       | M      | French      |   19 |
+|         27 |          1 | 2017 | 27 | Evariste Galois       | M      | French      |   19 |
+|         31 |          8 | 2017 | 31 | Sophie Germain        | F      | French      |   31 |
+|         36 |          0 | 2017 | 36 | Carl Friederich Gauss | M      | German      |   26 |
+|         36 |          6 | 2017 | 36 | Carl Friederich Gauss | M      | German      |   26 |
+|         36 |          8 | 2015 | 36 | Carl Friederich Gauss | M      | German      |   26 |
+|         36 |          9 | 2015 | 36 | Carl Friederich Gauss | M      | German      |   26 |
+|         36 |         11 | 2016 | 36 | Carl Friederich Gauss | M      | German      |   26 |
+|         37 |         11 | 2017 | 37 | Andre Marie Ampere    | M      | French      |   27 |
+|         38 |          8 | 2016 | 38 | Gottfried Leibniz     | M      | German      |   18 |
+|         41 |          2 | 2016 | 41 | Grace Hopper          | F      | American    |   22 |
+|         41 |          4 | 2015 | 41 | Grace Hopper          | F      | American    |   22 |
+|         41 |          4 | 2016 | 41 | Grace Hopper          | F      | American    |   22 |
+|         42 |          3 | 2015 | 42 | Margaret Hamilton     | F      | American    |   23 |
+|         42 |         10 | 2017 | 42 | Margaret Hamilton     | F      | American    |   23 |
+|         43 |          3 | 2016 | 43 | Linux Torvalds        | M      | Finnish     |   21 |
+|         43 |         13 | 2015 | 43 | Linux Torvalds        | M      | Finnish     |   21 |
+|         43 |         14 | 2017 | 43 | Linux Torvalds        | M      | Finnish     |   21 |
+|         44 |          3 | 2017 | 44 | Richard Stallman      | M      | American    |   25 |
+|         45 |          2 | 2017 | 45 | Dennis Ritchie        | M      | American    |   19 |
+|         45 |          4 | 2017 | 45 | Dennis Ritchie        | M      | American    |   19 |
+|         45 |          5 | 2015 | 45 | Dennis Ritchie        | M      | American    |   19 |
+|         45 |         12 | 2017 | 45 | Dennis Ritchie        | M      | American    |   19 |
+|         46 |          5 | 2016 | 46 | Tim Berners-Lee       | M      | American    |   20 |
+|         46 |          5 | 2017 | 46 | Tim Berners-Lee       | M      | American    |   20 |
+|         46 |         13 | 2016 | 46 | Tim Berners-Lee       | M      | American    |   20 |
++------------+------------+------+----+-----------------------+--------+-------------+------+
+45 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT People.name, People.nationality FROM Teaches JOIN People ON Teaches.teacher_id=People.id;
++-----------------------+-------------+
+| name                  | nationality |
++-----------------------+-------------+
+| George Boole          | British     |
+| Galileo Galilei       | Italian     |
+| Alan Turing           | British     |
+| Ada Lovelace          | British     |
+| Archimedes            | Greek       |
+| Charles Babbage       | British     |
+| John von Neumann      | Hungarian   |
+| Al-Khwarizmi          | Persian     |
+| David Hilbert         | German      |
+| Pierre-Simon Laplace  | French      |
+| Bernhard Riemann      | German      |
+| Daniel Bernoulli      | Swiss       |
+| Evariste Galois       | French      |
+| Sophie Germain        | French      |
+| Carl Friederich Gauss | German      |
+| Andre Marie Ampere    | French      |
+| Gottfried Leibniz     | German      |
+| Grace Hopper          | American    |
+| Margaret Hamilton     | American    |
+| Linux Torvalds        | Finnish     |
+| Richard Stallman      | American    |
+| Dennis Ritchie        | American    |
+| Tim Berners-Lee       | American    |
++-----------------------+-------------+
+23 rows in set (0.00 sec)
+
+mysql> SELECT People.nationality, COUNT(People.name) FROM (SELECT DISTINCT People.name, People.nationality FROM Teaches JOIN People ON Teaches.teacher_id=People.id) GROUP BY People.nationality;
+ERROR 1248 (42000): Every derived table must have its own alias
+mysql> SELECT s.nationality, COUNT(s.name) FROM (SELECT DISTINCT People.name, People.nationality FROM Teaches JOIN People ON Teaches.teacher_id=People.id) AS s GROUP BY s.nationality;
++-------------+---------------+
+| nationality | COUNT(s.name) |
++-------------+---------------+
+| American    |             5 |
+| British     |             4 |
+| Finnish     |             1 |
+| French      |             4 |
+| German      |             4 |
+| Greek       |             1 |
+| Hungarian   |             1 |
+| Italian     |             1 |
+| Persian     |             1 |
+| Swiss       |             1 |
++-------------+---------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT s.nationality, COUNT(s.name) FROM (SELECT DISTINCT People.name, People.nationality FROM Teaches JOIN People ON Teaches.teacher_id=People.id) AS s GROUP BY s.nationality LIMIT 1;
++-------------+---------------+
+| nationality | COUNT(s.name) |
++-------------+---------------+
+| American    |             5 |
++-------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT id FROM Subjects WHERE name="Data mining";
++----+
+| id |
++----+
+|  9 |
++----+
+1 row in set (0.00 sec)
+
+mysql> SELECT Studies.student_id FROM (SELECT id FROM Subjects WHERE name="Data mining") AS dm JOIN Studies ON dm.id=Studies.subject_id;
++------------+
+| student_id |
++------------+
+|          1 |
+|          3 |
+|          8 |
+|         16 |
+|         17 |
+|         26 |
+|         27 |
+|         32 |
+|         33 |
+|         33 |
+|         35 |
+|         38 |
+|         41 |
+|         43 |
+|         46 |
++------------+
+15 rows in set (0.02 sec)
+
+mysql> SELECT People.age FROM (SELECT Studies.student_id FROM (SELECT id FROM Subjects WHERE name="Data mining") AS dm JOIN Studies ON dm.id=Studies.subject_id) AS stu JOIN People ON People.id=stu.student_id;
++------+
+| age  |
++------+
+|   45 |
+|   36 |
+|   34 |
+|   19 |
+|   18 |
+|   28 |
+|   19 |
+|   32 |
+|   22 |
+|   22 |
+|   29 |
+|   18 |
+|   22 |
+|   21 |
+|   20 |
++------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT AVG(People.age) FROM (SELECT Studies.student_id FROM (SELECT id FROM Subjects WHERE name="Data mining") AS dm JOIN Studies ON dm.id=Studies.subject_id) AS stu JOIN People ON People.id=stu.student_id;
++-----------------+
+| AVG(People.age) |
++-----------------+
+|         25.6667 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> exit
