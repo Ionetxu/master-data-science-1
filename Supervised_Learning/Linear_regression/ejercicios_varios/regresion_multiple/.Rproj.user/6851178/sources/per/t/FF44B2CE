@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550254770017.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "729646592",
+    "id" : "FF44B2CE",
+    "lastKnownWriteTime" : 1550256162,
+    "last_content_update" : 1550256162,
+    "path" : "C:/Users/Henry N/Desktop/KSchool/my_course/day_1/Linear_regression/ejercicios_varios/regresion_multiple/solucion.R",
+    "project_path" : "solucion.R",
+    "properties" : {
+        "cursorPosition" : "110,12",
+        "scrollLine" : "105"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550258082586.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "227932112",
+    "id" : "1E6D3B8E",
+    "lastKnownWriteTime" : 1550177291,
+    "last_content_update" : 1550177291,
+    "path" : "C:/Users/Henry N/Desktop/KSchool/my_course/day_1/Linear_regression/housing_prices_estimation/notebook.R",
+    "project_path" : "notebook.R",
+    "properties" : {
+        "cursorPosition" : "245,0",
+        "scrollLine" : "229",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

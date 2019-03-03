@@ -1,0 +1,15 @@
+
+
+
+
+if (!require("OpenImageR")){install.packages("OpenImageR",verbose = F) ; library("OpenImageR")}
+if (!require("imager")){install.packages("imager",verbose = F) ; library("imager")}
+if (!require("jpeg")){install.packages("jpeg",verbose = F) ; library("jpeg")}
+if (!require("videoplayR")){install.packages("videoplayR",verbose = F) ; library("videoplayR")}
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("rhdf5")
+library(rhdf5)
+
+
+
